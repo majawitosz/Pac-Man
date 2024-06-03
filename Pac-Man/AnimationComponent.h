@@ -15,11 +15,12 @@ private:
 		float timer;
 		int width;
 		int height;
+		bool reverse;
 		sf::IntRect startRect;
 		sf::IntRect currentRect;
 		sf::IntRect endRect;
 		Animation(sf::Sprite& sprite, sf::Texture& texture_sheet, float animation_timer,
-			int start_x, int start_y, int frames_x, int frames_y, int width, int height);
+			int start_x, int start_y, int frames_x, int frames_y, int width, int height, bool reverse);
 
 		//Functions
 		void play(const float& dt);
@@ -37,7 +38,7 @@ public:
 	void addAnimation(const std::string key,
 		float animation_timer,
 		int start_frame_x, int start_frame_y, int frames_x, int frames_y,
-		int width, int height);
+		int width, int height, bool reverse);
 	/*void startAnimation(const std::string animation);
 	void pauseAnimation(const std::string animation);
 	void resetAnimation(const std::string animation);*/

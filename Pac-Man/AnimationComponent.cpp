@@ -4,8 +4,8 @@ AnimationComponent::Animation::Animation
 (
 	sf::Sprite& sprite, sf::Texture& texture_sheet,
 	float animation_timer, int start_frame_x, int start_frame_y,
-	int frames_x, int frames_y, int width, int height
-) : sprite(sprite), textureSheet(texture_sheet), animationTimer(animation_timer), width(width), height(height)
+	int frames_x, int frames_y, int width, int height, bool reverse
+) : sprite(sprite), textureSheet(texture_sheet), animationTimer(animation_timer), width(width), height(height), reverse(reverse)
 {
 	this->timer = 0.f;
 	this->startRect = sf::IntRect(start_frame_x * width, start_frame_y * height, width, height);
@@ -26,14 +26,30 @@ void AnimationComponent::Animation::play(const float& dt)
 		//reset timer
 		this->timer = 0.f;
 
-		//Animate
-		if (this->currentRect != this->endRect)
+		//Animate reverse
+		if (this->reverse)
 		{
-			this->currentRect.left += this->width;
+
+			if (this->currentRect != this->endRect)
+			{
+				this->currentRect.left -= this->width;
+			}
+			else //Reset
+			{
+				this->currentRect.left = this->startRect.left;
+			}
 		}
-		else //Reset
+		//Animate regular
+		else 
 		{
-			this->currentRect.left = this->startRect.left;
+			if (this->currentRect != this->endRect)
+			{
+				this->currentRect.left += this->width;
+			}
+			else //Reset
+			{
+				this->currentRect.left = this->startRect.left;
+			}
 		}
 		this->sprite.setTextureRect(this->currentRect);
 	}
@@ -70,13 +86,13 @@ void AnimationComponent::addAnimation(
 	float animation_timer,
 	int start_frame_x, int start_frame_y,
 	int frames_x, int frames_y,
-	int width, int height
+	int width, int height, bool reverse = false
 )
 {
 	this->animations[key] = new Animation(
 		this->sprite, this->textureSheet,
 		animation_timer, start_frame_x, start_frame_y,
-		frames_x, frames_y, width, height
+		frames_x, frames_y, width, height, reverse
 	);
 }
 

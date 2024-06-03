@@ -21,9 +21,9 @@ Player::Player(float x, float y, sf::Texture& texture)
 	this->createMovementComponent(100.f, 5.f, 3.f);
 	this->movementComponent->setVelocityOnStart();
 	this->createAnimationComponent(texture);
-	this->animationComponent->addAnimation("RIGHT", 20.f, 3, 0, 4, 0, 32, 32);
-	this->animationComponent->addAnimation("IDLE", 20.f, 3, 0, 3, 0, 32, 32);
-	this->animationComponent->addAnimation("LEFT", 20.f, 3, 0, -4, 0, 32, 32);
+	this->animationComponent->addAnimation("RIGHT", 20.f, 3, 0, 4, 0, 32, 32, 0);
+	this->animationComponent->addAnimation("IDLE", 20.f, 3, 0, 3, 0, 32, 32, 0);
+	this->animationComponent->addAnimation("LEFT", 20.f, 3, 0, 1, 0, 32, 32, true);
 
 }
 
