@@ -23,7 +23,7 @@ void GameState::initKeybinds()
 void GameState::initTextures()
 {
 
-	if (!this->textures["PLAYER_HORIZONTAL"].loadFromFile("Resources/Images/Pac-Man/pm_horizontal.png"))
+	if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Images/Pac-Man/pm_sheet.png"))
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_TEXTURE";
 	}
@@ -31,7 +31,7 @@ void GameState::initTextures()
 
 void GameState::initPlayers()
 {
-	this->player = new Player(0, 0, this->textures["PLAYER_HORIZONTAL"]);
+	this->player = new Player(0, 0, this->textures["PLAYER_SHEET"]);
 }
 
 GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
