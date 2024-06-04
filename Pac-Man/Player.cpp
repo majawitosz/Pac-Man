@@ -46,9 +46,9 @@ void Player::update(const float& dt)
 	else if (this->movementComponent->getMovingState(MOVING_LEFT))
 		this->animationComponent->play("LEFT", dt);
 	else if (this->movementComponent->getMovingState(MOVING_DOWN))
-		this->animationComponent->play("RIGHT", dt);
+		this->animationComponent->play("DOWN", dt);
 	else if (this->movementComponent->getMovingState(MOVING_UP))
-		this->animationComponent->play("RIGHT", dt);
+		this->animationComponent->play("UP", dt);
 
 	this->hitboxComponent->update();
 }
