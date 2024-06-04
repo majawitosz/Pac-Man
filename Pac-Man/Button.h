@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+
 
 enum buttonStates {
 	BTN_IDLE = 0,

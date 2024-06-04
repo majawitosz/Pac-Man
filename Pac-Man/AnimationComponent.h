@@ -1,6 +1,5 @@
 #pragma once
-#include <map>
-#include <SFML/Graphics.hpp>
+
 
 class AnimationComponent
 {

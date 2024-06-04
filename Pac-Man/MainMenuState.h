@@ -10,7 +10,7 @@ private:
 	sf::RectangleShape background;
 	sf::Font font;
 	std::map<std::string, Button*> buttons;
-
+	
 	//Functions
 	void initVariables();
 	void initFonts();
