@@ -4,8 +4,8 @@ AnimationComponent::Animation::Animation
 (
 	sf::Sprite& sprite, sf::Texture& texture_sheet,
 	float animation_timer, int start_frame_x, int start_frame_y,
-	int frames_x, int frames_y, int width, int height, bool reverse
-) : sprite(sprite), textureSheet(texture_sheet), animationTimer(animation_timer), width(width), height(height), reverse(reverse)
+	int frames_x, int frames_y, int width, int height
+) : sprite(sprite), textureSheet(texture_sheet), animationTimer(animation_timer), width(width), height(height)
 {
 	this->timer = 0.f;
 	this->startRect = sf::IntRect(start_frame_x * width, start_frame_y * height, width, height);
@@ -16,8 +16,7 @@ AnimationComponent::Animation::Animation
 	this->sprite.setTextureRect(this->startRect);
 
 }
-
-void AnimationComponent::Animation::play(const float& dt)
+void AnimationComponent::Animation::playRight(const float& dt)
 {
 	//Update timer
 	this->timer += 350.f * dt;
@@ -25,35 +24,82 @@ void AnimationComponent::Animation::play(const float& dt)
 	{
 		//reset timer
 		this->timer = 0.f;
-
-		//Animate reverse
-		if (this->reverse)
+		//Animate
+		if (this->currentRect != this->endRect)
 		{
-
-			if (this->currentRect != this->endRect)
-			{
-				this->currentRect.left -= this->width;
-			}
-			else //Reset
-			{
-				this->currentRect.left = this->startRect.left;
-			}
+			this->currentRect.left += this->width;
 		}
-		//Animate regular
-		else 
+		else //Reset
 		{
-			if (this->currentRect != this->endRect)
-			{
-				this->currentRect.left += this->width;
-			}
-			else //Reset
-			{
-				this->currentRect.left = this->startRect.left;
-			}
+			this->currentRect.left = this->startRect.left;
 		}
 		this->sprite.setTextureRect(this->currentRect);
 	}
 }
+
+void AnimationComponent::Animation::playLeft(const float& dt)
+{
+	//Update timer
+	this->timer += 350.f * dt;
+	if (this->timer >= this->animationTimer)
+	{
+		//reset timer
+		this->timer = 0.f;
+		//Animate
+		if (this->currentRect != this->endRect)
+		{
+			this->currentRect.left -= this->width;
+		}
+		else //Reset
+		{
+			this->currentRect.left = this->startRect.left;
+		}
+		this->sprite.setTextureRect(this->currentRect);
+	}
+}
+
+void AnimationComponent::Animation::playUp(const float& dt)
+{
+	//Update timer
+	this->timer += 350.f * dt;
+	if (this->timer >= this->animationTimer)
+	{
+		//reset timer
+		this->timer = 0.f;
+		//Animate
+		if (this->currentRect != this->endRect)
+		{
+			this->currentRect.top -= this->height;
+		}
+		else //Reset
+		{
+			this->currentRect.top = this->startRect.top;
+		}
+		this->sprite.setTextureRect(this->currentRect);
+	}
+}
+
+void AnimationComponent::Animation::playDown(const float& dt)
+{
+	//Update timer
+	this->timer += 350.f * dt;
+	if (this->timer >= this->animationTimer)
+	{
+		//reset timer
+		this->timer = 0.f;
+		//Animate
+		if (this->currentRect != this->endRect)
+		{
+			this->currentRect.top += this->height;
+		}
+		else //Reset
+		{
+			this->currentRect.top = this->startRect.top;
+		}
+		this->sprite.setTextureRect(this->currentRect);
+	}
+}
+
 
 void AnimationComponent::Animation::pause()
 {
@@ -86,30 +132,27 @@ void AnimationComponent::addAnimation(
 	float animation_timer,
 	int start_frame_x, int start_frame_y,
 	int frames_x, int frames_y,
-	int width, int height, bool reverse = false
+	int width, int height
 )
 {
 	this->animations[key] = new Animation(
 		this->sprite, this->textureSheet,
 		animation_timer, start_frame_x, start_frame_y,
-		frames_x, frames_y, width, height, reverse
+		frames_x, frames_y, width, height
 	);
 }
 
-//void AnimationComponent::startAnimation(const std::string animation)
-//{
-//}
-//
-//void AnimationComponent::pauseAnimation(const std::string animation)
-//{
-//}
-//
-//void AnimationComponent::resetAnimation(const std::string animation)
-//{
-//}
+
 
 void AnimationComponent::play(const std::string key, const float& dt)
 {
-	this->animations[key]->play(dt);
+	if(key == "IDLE" || key == "RIGHT")
+		this->animations[key]->playRight(dt);
+	else if (key == "LEFT")
+		this->animations[key]->playLeft(dt);
+	else if(key == "UP")
+		this->animations[key]->playUp(dt);
+	else if(key == "DOWN")
+		this->animations[key]->playDown(dt);
 }
 
