@@ -50,6 +50,7 @@ void Player::update(const float& dt)
 		this->animationComponent->play("DOWN", dt);
 	else if (this->movementComponent->getMovingState(MOVING_UP))
 		this->animationComponent->play("UP", dt);
-//this->hitboxComponent->update();
+	
+	this->hitboxComponent->update();
 }
 
