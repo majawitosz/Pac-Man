@@ -65,7 +65,7 @@ MainMenuState::~MainMenuState()
 void MainMenuState::initBackground()
 {
 	this->background.setSize(
-		sf::Vector2f(this->window->getSize().x, this->window->getSize().y));
+		sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
 
 	if (!this->bgTexture.loadFromFile("Resources/Images/Backgrounds/bg1.png"))
 	{
@@ -111,7 +111,7 @@ void MainMenuState::update(const float& dt)
 	this->updateButtons();
 }
 
-void MainMenuState::renderButtons(sf::RenderTarget* target)
+void MainMenuState::renderButtons(sf::RenderTarget& target)
 {
 	for (auto& it : this->buttons) {
 		it.second->render(target);
@@ -125,7 +125,7 @@ void MainMenuState::render(sf::RenderTarget* target)
 
 	target->draw(this->background);
 
-	this->renderButtons(target);
+	this->renderButtons(*target);
 
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
