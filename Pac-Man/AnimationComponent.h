@@ -22,7 +22,11 @@ private:
 			int start_x, int start_y, int frames_x, int frames_y, int width, int height);
 
 		//Functions
-		void play(const float& dt);
+		void playRight(const float& dt);
+		void playLeft(const float& dt);
+		void playUp(const float& dt);
+		void playDown(const float& dt);
+		
 		void pause();
 		void reset();
 	};
@@ -38,10 +42,9 @@ public:
 		float animation_timer,
 		int start_frame_x, int start_frame_y, int frames_x, int frames_y,
 		int width, int height);
-	/*void startAnimation(const std::string animation);
-	void pauseAnimation(const std::string animation);
-	void resetAnimation(const std::string animation);*/
+
 
 	void play(const std::string key, const float& dt);
+
 };
 

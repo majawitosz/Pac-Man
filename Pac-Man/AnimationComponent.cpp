@@ -16,8 +16,7 @@ AnimationComponent::Animation::Animation
 	this->sprite.setTextureRect(this->startRect);
 
 }
-
-void AnimationComponent::Animation::play(const float& dt)
+void AnimationComponent::Animation::playRight(const float& dt)
 {
 	//Update timer
 	this->timer += 350.f * dt;
@@ -25,7 +24,6 @@ void AnimationComponent::Animation::play(const float& dt)
 	{
 		//reset timer
 		this->timer = 0.f;
-
 		//Animate
 		if (this->currentRect != this->endRect)
 		{
@@ -38,6 +36,70 @@ void AnimationComponent::Animation::play(const float& dt)
 		this->sprite.setTextureRect(this->currentRect);
 	}
 }
+
+void AnimationComponent::Animation::playLeft(const float& dt)
+{
+	//Update timer
+	this->timer += 350.f * dt;
+	if (this->timer >= this->animationTimer)
+	{
+		//reset timer
+		this->timer = 0.f;
+		//Animate
+		if (this->currentRect != this->endRect)
+		{
+			this->currentRect.left -= this->width;
+		}
+		else //Reset
+		{
+			this->currentRect.left = this->startRect.left;
+		}
+		this->sprite.setTextureRect(this->currentRect);
+	}
+}
+
+void AnimationComponent::Animation::playUp(const float& dt)
+{
+	//Update timer
+	this->timer += 350.f * dt;
+	if (this->timer >= this->animationTimer)
+	{
+		//reset timer
+		this->timer = 0.f;
+		//Animate
+		if (this->currentRect != this->endRect)
+		{
+			this->currentRect.top -= this->height;
+		}
+		else //Reset
+		{
+			this->currentRect.top = this->startRect.top;
+		}
+		this->sprite.setTextureRect(this->currentRect);
+	}
+}
+
+void AnimationComponent::Animation::playDown(const float& dt)
+{
+	//Update timer
+	this->timer += 350.f * dt;
+	if (this->timer >= this->animationTimer)
+	{
+		//reset timer
+		this->timer = 0.f;
+		//Animate
+		if (this->currentRect != this->endRect)
+		{
+			this->currentRect.top += this->height;
+		}
+		else //Reset
+		{
+			this->currentRect.top = this->startRect.top;
+		}
+		this->sprite.setTextureRect(this->currentRect);
+	}
+}
+
 
 void AnimationComponent::Animation::pause()
 {
@@ -80,20 +142,17 @@ void AnimationComponent::addAnimation(
 	);
 }
 
-//void AnimationComponent::startAnimation(const std::string animation)
-//{
-//}
-//
-//void AnimationComponent::pauseAnimation(const std::string animation)
-//{
-//}
-//
-//void AnimationComponent::resetAnimation(const std::string animation)
-//{
-//}
+
 
 void AnimationComponent::play(const std::string key, const float& dt)
 {
-	this->animations[key]->play(dt);
+	if(key == "IDLE" || key == "RIGHT")
+		this->animations[key]->playRight(dt);
+	else if (key == "LEFT")
+		this->animations[key]->playLeft(dt);
+	else if(key == "UP")
+		this->animations[key]->playUp(dt);
+	else if(key == "DOWN")
+		this->animations[key]->playDown(dt);
 }
 
