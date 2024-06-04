@@ -15,7 +15,6 @@ private:
 		float timer;
 		int width;
 		int height;
-		bool reverse;
 		sf::IntRect startRect;
 		sf::IntRect currentRect;
 		sf::IntRect endRect;

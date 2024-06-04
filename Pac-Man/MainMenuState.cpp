@@ -65,7 +65,7 @@ MainMenuState::~MainMenuState()
 void MainMenuState::initBackground()
 {
 	this->background.setSize(
-		sf::Vector2f(this->window->getSize().x, this->window->getSize().y));
+		sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
 
 	if (!this->bgTexture.loadFromFile("Resources/Images/Backgrounds/bg1.png"))
 	{
