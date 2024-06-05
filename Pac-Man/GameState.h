@@ -8,13 +8,15 @@ class GameState : public State
 {
 private:
 	Player* player;
-
+	TileMap map;
+	sf::Sprite mapImage;
 	//Initializer functions
 	void initKeybinds();
 	void initTextures();
 	void initPlayers();
+	void initMapBackground();
 
-	TileMap map;
+	
 public:
 	GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
 	virtual ~GameState();
