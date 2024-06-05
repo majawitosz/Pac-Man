@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "MovementComponent.h"
 
 MovementComponent::MovementComponent(sf::Sprite& sprite,
@@ -69,6 +70,8 @@ void MovementComponent::move(const float dir_x, const float dir_y, const float& 
 
 	this->velocity.x = this->maxVelocity * dir_x;
 	this->velocity.y = this->maxVelocity * dir_y;
+
+
 }
 
 

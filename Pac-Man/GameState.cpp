@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "GameState.h"
 
 
@@ -27,11 +28,27 @@ void GameState::initTextures()
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_TEXTURE";
 	}
+	if (!this->textures["MAP"].loadFromFile("Resources/Images/Backgrounds/map.png"))
+	{
+		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_MAP_TEXTURE";
+	}
 }
 
 void GameState::initPlayers()
 {
 	this->player = new Player(0, 0, this->textures["PLAYER_SHEET"]);
+}
+
+void GameState::initMapBackground()
+{
+	this->mapImage.setTexture(this->textures["MAP"]);
+
+		
+}
+
+void GameState::initMap()
+{
+	map.loadMapFromFile("Resources/Map/map.txt");
 }
 
 GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
@@ -40,6 +57,8 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initKeybinds();
 	this->initTextures();
 	this->initPlayers();
+	this->initMapBackground();
+	this->initMap();
 }
 
 GameState::~GameState()
@@ -79,9 +98,14 @@ void GameState::render(sf::RenderTarget* target)
 	if (!target)
 		target = this->window;
 
+	this->map.render(*target);
+	
+	//target->draw(this->mapImage);
+
 	this->player->render(*target);
 
-
+	
+	
 
 }
 

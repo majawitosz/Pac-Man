@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Player.h"
 
 
@@ -18,10 +19,13 @@ Player::Player(float x, float y, sf::Texture& texture)
 	this->initVariables();
 
 	this->setPosition(x, y);
-
-	this->createhitboxComponent(this->sprite, 0.f, 0.f, 32.f, 32.f);
+	this->sprite.setScale(0.8f, 0.8f);
+	
+	this->createhitboxComponent(this->sprite, 0.f, 0.f, 32.f * 0.8f, 32.f * 0.8f);
 	this->createMovementComponent(100.f, 5.f, 3.f);
 	this->movementComponent->setVelocityOnStart();
+	
+	
 	this->createAnimationComponent(texture);
 	this->animationComponent->addAnimation("RIGHT", 20.f, 3, 3, 6, 3, 32, 32);
 	this->animationComponent->addAnimation("IDLE", 20.f, 3, 3, 3, 3, 32, 32);

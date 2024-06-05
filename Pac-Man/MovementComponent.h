@@ -1,14 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include <ctime>
-#include <fstream>
-#include <sstream>
-#include <stack>
-#include <map>
-#include <memory>
 
-#include <SFML/Graphics.hpp>
 
 
 enum movementStates { IDLE = 0, MOVING_LEFT, MOVING_RIGHT, MOVING_UP, MOVING_DOWN };
