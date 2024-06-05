@@ -9,6 +9,8 @@ Tile::Tile(float x, float y, float gridSizeF)
 {
 	this->shape.setSize(sf::Vector2f(gridSizeF, gridSizeF));
 	this->shape.setFillColor(sf::Color::Blue);
+	this->shape.setOutlineThickness(1.f);
+	this->shape.setOutlineColor(sf::Color::Cyan);
 	this->shape.setPosition(x, y);
 }
 
