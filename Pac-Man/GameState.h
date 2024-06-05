@@ -15,6 +15,7 @@ private:
 	void initTextures();
 	void initPlayers();
 	void initMapBackground();
+	void initMap();
 
 	
 public:

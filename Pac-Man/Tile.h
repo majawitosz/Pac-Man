@@ -7,9 +7,10 @@ private:
 
 protected:
 	sf::RectangleShape shape;
+	
 public:
 	Tile();
-	Tile(float x, float y, float gridSizeF);
+	Tile(float x, float y, float gridSizeF, int value);
 	virtual ~Tile();
 
 	//Function

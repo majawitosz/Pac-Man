@@ -46,6 +46,11 @@ void GameState::initMapBackground()
 		
 }
 
+void GameState::initMap()
+{
+	map.loadMapFromFile("Resources/Map/map.txt");
+}
+
 GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
 	: State(window, supportedKeys, states)
 {
@@ -53,6 +58,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initTextures();
 	this->initPlayers();
 	this->initMapBackground();
+	this->initMap();
 }
 
 GameState::~GameState()
@@ -93,7 +99,8 @@ void GameState::render(sf::RenderTarget* target)
 		target = this->window;
 
 	this->map.render(*target);
-	target->draw(this->mapImage);
+	
+	//target->draw(this->mapImage);
 
 	this->player->render(*target);
 

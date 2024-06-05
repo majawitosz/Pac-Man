@@ -22,7 +22,7 @@ TileMap::TileMap()
 			for (size_t z = 0; z < this->layers; z++)
 			{
 				this->map[x][y].resize(this->layers);
-				this->map[x][y].push_back(Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF));
+				this->map[x][y].push_back(Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, 0));
 			}
 		}
 	}
@@ -31,6 +31,34 @@ TileMap::TileMap()
 
 TileMap::~TileMap()
 {
+
+}
+
+void TileMap::loadMapFromFile(const std::string& filePath)
+{
+	std::ifstream file(filePath);
+	if (!file.is_open())
+	{
+		throw "ERROR::TILE_MAP::COULD_NOT_LOAD_MAP_TXT";
+	}
+	std::string line;
+	int y = 0;
+	while (std::getline(file, line))
+	{
+		for (int x = 0; x < line.size(); ++x)
+		{
+			int value = (line[x] == '1') ? 1 : 0;
+			this->map[x][y][0] = Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, value);
+	/*		if (line[x] == '1')
+			{
+				this->map[x][y][0] = Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, value);
+			}*/
+		}
+		++y;
+	}
+
+	file.close();
+
 }
 
 void TileMap::update()

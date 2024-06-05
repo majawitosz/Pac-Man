@@ -16,6 +16,7 @@ public:
 	virtual ~TileMap();
 
 	//Functions
+	void loadMapFromFile(const std::string& filePath);
 	void update();
 	void render(sf::RenderTarget& target);
 
