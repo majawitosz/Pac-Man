@@ -36,7 +36,7 @@ void GameState::initTextures()
 
 void GameState::initPlayers()
 {
-	this->player = new Player(0, 0, this->textures["PLAYER_SHEET"]);
+	this->player = new Player(200, 200, this->textures["PLAYER_SHEET"]);
 }
 
 void GameState::initMapBackground()
@@ -67,10 +67,25 @@ GameState::~GameState()
 }
 
 
-//void GameState::checkMapPlayerIntersect()
-//{
-//	sf::FloatRect playerBounds = this->sprite.getGlobalBounds();
-//}
+void GameState::checkMapPlayerIntersect()
+{
+	sf::FloatRect playerBounds = this->player->getHitboxBounds();
+
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsWall() && z.getGlobalBounds().intersects(playerBounds))
+				{
+					this->player->move(0.f, 0.f, 0);
+
+				}
+			}
+		}
+	}
+}
 
 void GameState::updateInput(const float& dt)
 {
@@ -93,6 +108,7 @@ void GameState::updateInput(const float& dt)
 void GameState::update(const float& dt)
 {
 	this->updateMousePosition();
+	this->checkMapPlayerIntersect();
 	this->updateInput(dt);
 
 	this->player->update(dt);
@@ -105,7 +121,7 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->map.render(*target);
 	
-	//target->draw(this->mapImage);
+	target->draw(this->mapImage);
 
 	this->player->render(*target);
 

@@ -32,21 +32,21 @@ Player::Player(float x, float y, sf::Texture& texture)
 	this->animationComponent->addAnimation("LEFT", 20.f, 3, 3, 0, 3, 32, 32);
 	this->animationComponent->addAnimation("UP", 20.f, 3, 3, 3, 0, 32, 32);
 	this->animationComponent->addAnimation("DOWN", 20.f, 3, 3, 3, 6, 32, 32);
-
+	this->animationComponent->play("IDLE", 0);
 }
 
 Player::~Player()
 {
 }
 
+
+
 //Functions
 void Player::update(const float& dt)
 {
 	this->movementComponent->update(dt);
 
-	if (this->movementComponent->getMovingState(IDLE))
-		this->animationComponent->play("IDLE", dt);
-	else if (this->movementComponent->getMovingState(MOVING_RIGHT))
+	if (this->movementComponent->getMovingState(MOVING_RIGHT))
 		this->animationComponent->play("RIGHT", dt);
 	else if (this->movementComponent->getMovingState(MOVING_LEFT))
 		this->animationComponent->play("LEFT", dt);

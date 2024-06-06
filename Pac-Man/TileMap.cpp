@@ -34,6 +34,11 @@ TileMap::~TileMap()
 
 }
 
+const std::vector<std::vector<std::vector<Tile>>>& TileMap::getMap() const
+{
+	return this->map;
+}
+
 void TileMap::loadMapFromFile(const std::string& filePath)
 {
 	std::ifstream file(filePath);
@@ -49,10 +54,6 @@ void TileMap::loadMapFromFile(const std::string& filePath)
 		{
 			bool isWall = (line[x] == '1') ? true : false;
 			this->map[x][y][0] = Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, isWall);
-	/*		if (line[x] == '1')
-			{
-				this->map[x][y][0] = Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, value);
-			}*/
 		}
 		++y;
 	}
