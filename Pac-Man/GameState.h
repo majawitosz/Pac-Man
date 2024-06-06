@@ -23,6 +23,7 @@ public:
 	virtual ~GameState();
 
 	//Functions
+	void checkMapPlayerIntersect();
 	void updateInput(const float& dt) override;
 	void update(const float& dt) override;
 	void render(sf::RenderTarget* target = nullptr) override;

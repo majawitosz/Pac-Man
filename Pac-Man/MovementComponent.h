@@ -20,7 +20,7 @@ private:
 
 public:
 	MovementComponent(sf::Sprite& sprite, float maxVelocity,
-		float acceleration, float decerelation);
+		float acceleration, float deceleration);
 	virtual ~MovementComponent();
 
 	//Accessors

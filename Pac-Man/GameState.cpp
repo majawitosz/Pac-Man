@@ -67,6 +67,11 @@ GameState::~GameState()
 }
 
 
+//void GameState::checkMapPlayerIntersect()
+//{
+//	sf::FloatRect playerBounds = this->sprite.getGlobalBounds();
+//}
+
 void GameState::updateInput(const float& dt)
 {
 

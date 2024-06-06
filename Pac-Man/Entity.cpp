@@ -60,6 +60,16 @@ void Entity::move(const float dir_x, const float dir_y, const float& dt)
 	}
 }
 
+//void Entity::getPosition()
+//{
+//	this->hitboxComponent->checkIntersect();
+//
+//}
+
+void Entity::checkForCollisions()
+{
+}
+
 void Entity::update(const float& dt)
 {
 
