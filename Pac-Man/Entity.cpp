@@ -51,6 +51,13 @@ sf::FloatRect Entity::getHitboxBounds() const
 	return sf::FloatRect();
 }
 
+MovementComponent* Entity::getMovementComponent()
+{
+	if (this->movementComponent)
+		return this->movementComponent;
+	return nullptr;
+}
+
 
 //Functions
 void Entity::setPosition(const float x, const float y)

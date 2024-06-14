@@ -2,7 +2,7 @@
 #include "State.h"
 #include "TileMap.h"
 
-
+enum nextDirection { MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN };
 
 class GameState : public State
 {
@@ -10,12 +10,20 @@ private:
 	Player* player;
 	TileMap map;
 	sf::Sprite mapImage;
+	sf::Font font;
+	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
+	bool canMoveRight = true;
+	bool canMoveLeft = true;
+	bool canMoveUp = true;
+	bool canMoveDown = true;
+	std::stack<nextDirection> directionStack;
 	//Initializer functions
 	void initKeybinds();
 	void initTextures();
 	void initPlayers();
 	void initMapBackground();
 	void initMap();
+	void initFonts();
 
 	
 public:
@@ -23,9 +31,12 @@ public:
 	virtual ~GameState();
 
 	//Functions
-	void checkMapPlayerIntersect();
+	void checkMapPlayerIntersect(const float& dt);
+	void collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds, const float& dt);
+	void resetCollisions();
 	void updateInput(const float& dt) override;
 	void update(const float& dt) override;
 	void render(sf::RenderTarget* target = nullptr) override;
+	
 };
 

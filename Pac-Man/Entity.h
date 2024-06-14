@@ -31,6 +31,8 @@ public:
 
 	// Accessors
 	virtual sf::FloatRect getHitboxBounds() const;
+	virtual  MovementComponent* getMovementComponent();
+
 
 	//Functions
 	virtual void setPosition(const float x, const float y);
