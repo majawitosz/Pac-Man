@@ -45,8 +45,7 @@ Player::~Player()
 void Player::update(const float& dt)
 {
 	this->movementComponent->update(dt);
-	std::string lastDierection = this->movementComponent->getLastDirection();
-	std::cout << lastDierection << std::endl;
+	
 
 	if (this->movementComponent->getMovingState(MOVING_RIGHT))
 		this->animationComponent->play("RIGHT", dt);
@@ -56,9 +55,7 @@ void Player::update(const float& dt)
 		this->animationComponent->play("DOWN", dt);
 	else if (this->movementComponent->getMovingState(MOVING_UP))
 		this->animationComponent->play("UP", dt);
-	else if (this->movementComponent->getMovingState(IDLE)) {
-		this->animationComponent->play(lastDierection, dt);
-	}
+	
 	
 	this->hitboxComponent->update();
 }
