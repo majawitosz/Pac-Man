@@ -2,7 +2,7 @@
 #include "State.h"
 #include "TileMap.h"
 
-enum nextDirection { MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN };
+
 
 class GameState : public State
 {
@@ -16,7 +16,7 @@ private:
 	bool canMoveLeft = true;
 	bool canMoveUp = true;
 	bool canMoveDown = true;
-	std::stack<nextDirection> directionStack;
+	
 	//Initializer functions
 	void initKeybinds();
 	void initTextures();

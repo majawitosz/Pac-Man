@@ -78,7 +78,9 @@ GameState::~GameState()
 
 void GameState::checkMapPlayerIntersect(const float& dt)
 {
-	sf::FloatRect playerBounds = this->player->getHitboxBounds();
+
+	//sf::FloatRect playerBounds = this->player->getHitboxBounds();
+	sf::FloatRect playerBounds = this->player->getPosition();
 
 	for (auto& x : this->map.getMap())
 	{
@@ -105,7 +107,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 	if (playerBounds.left < wallBounds.left + wallBounds.width && this->direction == 0)
 	{
 		this->player->setPosition(this->player->getPosition().left + 0.1f, this->player->getPosition().top);
-		this->player->getMovementComponent()->stopVelocityX();
+		this->player->getMovementComponent()->stopVelocity();
 		this->canMoveUp = true;
 		this->canMoveDown = true;
 		this->canMoveRight = true;
@@ -115,7 +117,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 	else if ((playerBounds.left + playerBounds.width) > wallBounds.left && this->direction == 1)
 	{
 		this->player->setPosition(this->player->getPosition().left - 0.1f, this->player->getPosition().top);
-		this->player->getMovementComponent()->stopVelocityX();
+		this->player->getMovementComponent()->stopVelocity();
 		this->canMoveUp = true;
 		this->canMoveDown = true;
 		this->canMoveRight = false;
@@ -126,7 +128,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 	if (playerBounds.top > wallBounds.top - wallBounds.height && this->direction == 2)
 	{
 		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top + 0.1f);
-		this->player->getMovementComponent()->stopVelocityY();
+		this->player->getMovementComponent()->stopVelocity();
 		this->canMoveUp = false;
 		this->canMoveDown = true;
 		this->canMoveRight = true;
@@ -136,7 +138,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 	else if (playerBounds.top + playerBounds.height > wallBounds.top && this->direction == 3)
 	{
 		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top - 0.1f);
-		this->player->getMovementComponent()->stopVelocityY();
+		this->player->getMovementComponent()->stopVelocity();
 		this->canMoveUp = true;
 		this->canMoveDown = false;
 		this->canMoveRight = true;
@@ -158,21 +160,25 @@ void GameState::updateInput(const float& dt)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT"))) && this->canMoveLeft) {
 		this->direction = 0;
+		this->player->getMovementComponent()->addDirectionToStack(MOVING_LEFT);
 		this->player->move(-1.f, 0.f, dt);
 		this->resetCollisions();
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))) && this->canMoveRight) {
 		this->direction = 1;
+		this->player->getMovementComponent()->addDirectionToStack(MOVING_RIGHT);
 		this->player->move(1.f, 0.f, dt);
 		this->resetCollisions();
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))) && this->canMoveUp) {
 		this->direction = 2;
+		this->player->getMovementComponent()->addDirectionToStack(MOVING_UP);
 		this->player->move(0.f, -1.f, dt);
 		this->resetCollisions();
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))) && this->canMoveDown) {
 		this->direction = 3;
+		this->player->getMovementComponent()->addDirectionToStack(MOVING_DOWN);
 		this->player->move(0.f, 1.f, dt);
 		this->resetCollisions();
 	}

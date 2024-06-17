@@ -23,7 +23,7 @@ Player::Player(float x, float y, sf::Texture& texture)
 	
 	this->createhitboxComponent(this->sprite, 2.8f, 2.8f, 20.f , 20.f);
 	this->createMovementComponent(100.f, 5.f, 3.f);
-	this->movementComponent->setVelocityOnStart();
+	this->movementComponent->stopVelocity();
 	
 	
 	this->createAnimationComponent(texture);
@@ -32,7 +32,7 @@ Player::Player(float x, float y, sf::Texture& texture)
 	this->animationComponent->addAnimation("LEFT", 20.f, 3, 3, 0, 3, 32, 32);
 	this->animationComponent->addAnimation("UP", 20.f, 3, 3, 3, 0, 32, 32);
 	this->animationComponent->addAnimation("DOWN", 20.f, 3, 3, 3, 6, 32, 32);
-	this->animationComponent->play("IDLE", 0);
+	//this->animationComponent->play("IDLE", 0);
 }
 
 Player::~Player()
@@ -45,6 +45,8 @@ Player::~Player()
 void Player::update(const float& dt)
 {
 	this->movementComponent->update(dt);
+	std::string lastDierection = this->movementComponent->getLastDirection();
+	std::cout << lastDierection << std::endl;
 
 	if (this->movementComponent->getMovingState(MOVING_RIGHT))
 		this->animationComponent->play("RIGHT", dt);
@@ -54,6 +56,9 @@ void Player::update(const float& dt)
 		this->animationComponent->play("DOWN", dt);
 	else if (this->movementComponent->getMovingState(MOVING_UP))
 		this->animationComponent->play("UP", dt);
+	else if (this->movementComponent->getMovingState(IDLE)) {
+		this->animationComponent->play(lastDierection, dt);
+	}
 	
 	this->hitboxComponent->update();
 }
