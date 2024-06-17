@@ -143,11 +143,13 @@ void AnimationComponent::addAnimation(
 	);
 }
 
-
+// PlayIdle
 
 void AnimationComponent::play(const std::string key, const float& dt)
 {
-	if(key == "IDLE" || key == "RIGHT")
+	if(key == "IDLE")
+		this->animations[key]->playRight(dt);
+	else if(key == "RIGHT")
 		this->animations[key]->playRight(dt);
 	else if (key == "LEFT")
 		this->animations[key]->playLeft(dt);

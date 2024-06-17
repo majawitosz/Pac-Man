@@ -2,10 +2,10 @@
 #include "MovementComponent.h"
 
 MovementComponent::MovementComponent(sf::Sprite& sprite,
-	float maxVelocity, float acceleration, float decerelation)
-	: sprite(sprite), maxVelocity(maxVelocity), acceleration(acceleration), deceleration(deceleration)
+	float maxVelocity, float acceleration, float deceleration)
+	: sprite(sprite), maxVelocity(maxVelocity), acceleration(acceleration), deceleration(deceleration), velocity(0.f, 0.f)
 {
-	this->maxVelocity = maxVelocity;
+	this->directionStack.push(IDLE);
 }
 
 MovementComponent::~MovementComponent()
@@ -19,7 +19,7 @@ const sf::Vector2f& MovementComponent::getVelocity() const
 }
 
 //Functions
-void MovementComponent::setVelocityOnStart()
+void MovementComponent::stopVelocity()
 {
 	this->velocity.x = 0.f;
 	this->velocity.y = 0.f;
@@ -64,6 +64,34 @@ const bool MovementComponent::getMovingState(const short unsigned state) const
 }
 
 
+
+
+std::string MovementComponent::getLastDirection() const
+{
+
+	std::string lastDirection;
+	if (!this->directionStack.empty())
+		switch (this->directionStack.top()) {
+		case 1:
+			lastDirection = "LEFT";
+			break;
+		case 2:
+			lastDirection = "RIGHT";
+			break;
+		case 3:
+			lastDirection = "UP";
+			break;
+		case 4:
+			lastDirection = "DOWN";
+		default:
+			break;
+		}
+	return lastDirection;
+	
+}
+
+
+
 void MovementComponent::move(const float dir_x, const float dir_y, const float& dt)
 {
 	//Acceleration
@@ -82,4 +110,9 @@ void MovementComponent::update(const float& dt)
 
 	//Final move
 	this->sprite.move(this->velocity * dt); //Uses velocity
+}
+
+void MovementComponent::addDirectionToStack(movementStates direction)
+{
+	this->directionStack.push(direction);
 }

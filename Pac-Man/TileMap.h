@@ -15,8 +15,13 @@ public:
 	TileMap();
 	virtual ~TileMap();
 
+	// Accessor function
+	const std::vector<std::vector<std::vector<Tile>>>& getMap() const;
+
+
 	//Functions
 	void loadMapFromFile(const std::string& filePath);
+	
 	void update();
 	void render(sf::RenderTarget& target);
 

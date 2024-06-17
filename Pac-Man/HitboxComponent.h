@@ -16,6 +16,7 @@ public:
 
 	//Functions
 	bool checkIntersect(const sf::FloatRect& frect);
+	virtual sf::FloatRect getPosition();
 	void update();
 	void render(sf::RenderTarget& target);
 };

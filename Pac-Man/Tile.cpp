@@ -1,15 +1,16 @@
 #include "stdafx.h"
 #include "Tile.h"
 
-Tile::Tile()
+Tile::Tile() : isWall(false)
 {
 }
 
-Tile::Tile(float x, float y, float gridSizeF, int value)
+Tile::Tile(float x, float y, float gridSizeF, bool isWall): isWall(isWall)
 {
+	
 	this->shape.setSize(sf::Vector2f(gridSizeF, gridSizeF));
 
-	if (value == 1)
+	if (this->isWall)
 		this->shape.setFillColor(sf::Color::Blue);
 	else
 		this->shape.setFillColor(sf::Color::Transparent);
@@ -19,11 +20,23 @@ Tile::Tile(float x, float y, float gridSizeF, int value)
 	this->shape.setOutlineColor(sf::Color::Cyan);
 	this->shape.setPosition(x, y);
 	
+	
 }
 
 Tile::~Tile()
 {
 
+}
+
+
+bool Tile::getIsWall() const
+{
+	return this->isWall;
+}
+
+sf::FloatRect Tile::getGlobalBounds() const
+{
+	return this->shape.getGlobalBounds();
 }
 
 //Functions

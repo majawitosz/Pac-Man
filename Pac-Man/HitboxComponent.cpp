@@ -25,6 +25,11 @@ bool HitboxComponent::checkIntersect(const sf::FloatRect& frect)
 	return this->hitbox.getGlobalBounds().intersects(frect);
 }
 
+sf::FloatRect HitboxComponent::getPosition()
+{
+	return this->hitbox.getGlobalBounds();
+}
+
 void HitboxComponent::update()
 {
 	//After the movement component

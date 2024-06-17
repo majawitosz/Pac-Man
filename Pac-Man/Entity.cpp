@@ -44,6 +44,20 @@ void Entity::createhitboxComponent(sf::Sprite& sprite, float offset_x, float off
 	this->hitboxComponent = new HitboxComponent(sprite, offset_x, offset_y, width, height);
 }
 
+sf::FloatRect Entity::getHitboxBounds() const
+{
+	if (this->hitboxComponent)
+		return this->hitboxComponent->getPosition();
+	return sf::FloatRect();
+}
+
+MovementComponent* Entity::getMovementComponent()
+{
+	if (this->movementComponent)
+		return this->movementComponent;
+	return nullptr;
+}
+
 
 //Functions
 void Entity::setPosition(const float x, const float y)
@@ -59,6 +73,13 @@ void Entity::move(const float dir_x, const float dir_y, const float& dt)
 
 	}
 }
+
+sf::FloatRect Entity::getPosition()
+{
+	return this->sprite.getGlobalBounds();
+}
+
+
 
 void Entity::update(const float& dt)
 {
