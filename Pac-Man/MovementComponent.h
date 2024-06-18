@@ -17,6 +17,7 @@ private:
 	
 	std::stack<movementStates> directionStack;
 
+
 	sf::Vector2f velocity;
 
 	//Initializaer functions
@@ -29,13 +30,18 @@ public:
 	//Accessors
 	const sf::Vector2f& getVelocity() const;
 	std::string getLastDirection() const;
-	
 	const bool getMovingState(const short unsigned state) const;
+	std::stack<movementStates>* getDirectionStack();
+
 
 	//Functions
 	void stopVelocity();
+
 	void move(const float dir_x, const float dir_y, const float& dt);
 	void update(const float& dt);
 	void addDirectionToStack(movementStates direction);
+
+	
+	
 };
 

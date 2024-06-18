@@ -26,6 +26,8 @@ void MovementComponent::stopVelocity()
 }
 
 
+
+
 const bool MovementComponent::getMovingState(const short unsigned state) const
 {
 	switch (state)
@@ -63,6 +65,14 @@ const bool MovementComponent::getMovingState(const short unsigned state) const
 	return false;
 }
 
+std::stack<movementStates>* MovementComponent::getDirectionStack()
+{
+	if (!this->directionStack.empty()) {
+		return &directionStack;
+	}
+	return nullptr;
+}
+
 
 
 
@@ -83,8 +93,7 @@ std::string MovementComponent::getLastDirection() const
 			break;
 		case 4:
 			lastDirection = "DOWN";
-		default:
-			break;
+		
 		}
 	return lastDirection;
 	
@@ -116,3 +125,7 @@ void MovementComponent::addDirectionToStack(movementStates direction)
 {
 	this->directionStack.push(direction);
 }
+
+
+
+
