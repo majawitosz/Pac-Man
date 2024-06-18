@@ -5,7 +5,7 @@ MovementComponent::MovementComponent(sf::Sprite& sprite,
 	float maxVelocity, float acceleration, float deceleration)
 	: sprite(sprite), maxVelocity(maxVelocity), acceleration(acceleration), deceleration(deceleration), velocity(0.f, 0.f)
 {
-	this->directionStack.push(IDLE);
+	this->direction = IDLE;
 }
 
 MovementComponent::~MovementComponent()
@@ -71,6 +71,16 @@ std::stack<movementStates>* MovementComponent::getDirectionStack()
 		return &directionStack;
 	}
 	return nullptr;
+}
+
+void MovementComponent::setDirection(movementStates direction)
+{
+	this->direction = direction;
+}
+
+movementStates MovementComponent::getDirection()
+{
+	return this->direction;
 }
 
 

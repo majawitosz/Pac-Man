@@ -76,10 +76,8 @@ GameState::~GameState()
 }
 
 
-void GameState::checkMapPlayerIntersect(const float& dt)
+bool GameState::checkMapPlayerIntersect()
 {
-
-	
 	sf::FloatRect playerBounds = this->player->getPosition();
 
 	for (auto& x : this->map.getMap())
@@ -91,46 +89,50 @@ void GameState::checkMapPlayerIntersect(const float& dt)
 				if (z.getIsWall() && z.getGlobalBounds().intersects(playerBounds))
 				{
 					sf::FloatRect wallBounds = z.getGlobalBounds();
-					this->collisionManagement(playerBounds, wallBounds, dt);
+					this->collisionManagement(playerBounds, wallBounds);
+					return true;
 				
 				}
 			}
 		}
 	}
+	return false;
 }
 
-void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds, const float& dt)
+void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds)
 {
+	
 	// Left
 	if (playerBounds.left < wallBounds.left + wallBounds.width && this->direction == 0)
 	{
-		this->player->setPosition(this->player->getPosition().left + 0.1f, this->player->getPosition().top);
 		this->player->getMovementComponent()->stopVelocity();
-
+		this->player->setPosition(this->player->getPosition().left + 0.1f, this->player->getPosition().top);
+		isWall = true;
 	}
 	// Right
 	else if ((playerBounds.left + playerBounds.width) > wallBounds.left && this->direction == 1)
 	{
+		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(this->player->getPosition().left - 0.1f, this->player->getPosition().top);
-		this->player->getMovementComponent()->stopVelocity();
-
+		isWall = true;
 	}
-	// Up
-	if (playerBounds.top > wallBounds.top - wallBounds.height && this->direction == 2)
-	{
-		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top + 0.1f);
-		this->player->getMovementComponent()->stopVelocity();
 
+	// Up
+	else if (playerBounds.top > wallBounds.top - wallBounds.height && this->direction == 2)
+	{
+		this->player->getMovementComponent()->stopVelocity();
+		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top + 0.1f);
+		isWall = true;
 	}
 	// Down
 	else if (playerBounds.top + playerBounds.height > wallBounds.top && this->direction == 3)
 	{
-		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top - 0.1f);
 		this->player->getMovementComponent()->stopVelocity();
-
+		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top - 0.1f);
+		isWall = true;
 	}
+	isWall = false;
 }
-
 
 
 bool GameState::checkMoveLeft()
@@ -175,7 +177,6 @@ bool GameState::checkMoveRight()
 	}
 	return true;
 }
-
 bool GameState::checkMoveUp()
 {
 	sf::FloatRect nextPosition = this->player->getPosition();
@@ -197,7 +198,6 @@ bool GameState::checkMoveUp()
 	}
 	return true;
 }
-
 bool GameState::checkMoveDown()
 {
 	sf::FloatRect nextPosition = this->player->getPosition();
@@ -224,19 +224,19 @@ void GameState::updateInput(const float& dt)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
 		this->direction = 0;
-		this->player->getMovementComponent()->addDirectionToStack(MOVING_LEFT);
+		this->player->getMovementComponent()->setDirection(MOVING_LEFT);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT")))) {
 		this->direction = 1;
-		this->player->getMovementComponent()->addDirectionToStack(MOVING_RIGHT);
+		this->player->getMovementComponent()->setDirection(MOVING_RIGHT);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP")))) {
 		this->direction = 2;
-		this->player->getMovementComponent()->addDirectionToStack(MOVING_UP);
+		this->player->getMovementComponent()->setDirection(MOVING_UP);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN")))) {
 		this->direction = 3;
-		this->player->getMovementComponent()->addDirectionToStack(MOVING_DOWN);
+		this->player->getMovementComponent()->setDirection(MOVING_DOWN);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE")))) {
 		this->endState();
@@ -245,11 +245,11 @@ void GameState::updateInput(const float& dt)
 
 void GameState::movementManager(const float& dt)
 {
-	
-		switch (this->player->getMovementComponent()->getDirectionStack()->top())
+	if (!this->checkMapPlayerIntersect() && !isWall ) {
+		switch (this->player->getMovementComponent()->getDirection())
 		{
-		case 1: 
-			if (this->checkMoveLeft()) { 
+		case 1:
+			if (this->checkMoveLeft()) {
 				this->player->move(-1.f, 0.f, dt);
 			}
 			break;
@@ -259,7 +259,7 @@ void GameState::movementManager(const float& dt)
 			}
 			break;
 		case 3:
-			if ( this->checkMoveUp()) {
+			if (this->checkMoveUp()) {
 				this->player->move(0.f, -1.f, dt);
 			}
 			break;
@@ -271,6 +271,8 @@ void GameState::movementManager(const float& dt)
 		default:
 			break;
 		}
+	}
+		
 }
 
 void GameState::update(const float& dt)
@@ -278,11 +280,7 @@ void GameState::update(const float& dt)
 	this->updateMousePosition();
 	this->updateInput(dt);
 	this->movementManager(dt);
-	this->checkMapPlayerIntersect(dt);
 	
-	
-	
-
 	this->player->update(dt);
 }
 

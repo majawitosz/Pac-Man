@@ -12,6 +12,7 @@ private:
 	sf::Sprite mapImage;
 	sf::Font font;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
+	bool isWall = false;
 	
 	//Initializer functions
 	void initKeybinds();
@@ -27,8 +28,8 @@ public:
 	virtual ~GameState();
 
 	//Functions
-	void checkMapPlayerIntersect(const float& dt);
-	void collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds, const float& dt);
+	bool checkMapPlayerIntersect();
+	void collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds);
 	
 	bool checkMoveLeft();
 	bool checkMoveRight();

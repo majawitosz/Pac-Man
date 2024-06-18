@@ -32,7 +32,7 @@ Player::Player(float x, float y, sf::Texture& texture)
 	this->animationComponent->addAnimation("LEFT", 20.f, 3, 3, 0, 3, 32, 32);
 	this->animationComponent->addAnimation("UP", 20.f, 3, 3, 3, 0, 32, 32);
 	this->animationComponent->addAnimation("DOWN", 20.f, 3, 3, 3, 6, 32, 32);
-	//this->animationComponent->play("IDLE", 0);
+	this->animationComponent->play("IDLE", 0);
 }
 
 Player::~Player()

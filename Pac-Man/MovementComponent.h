@@ -16,6 +16,7 @@ private:
 	float deceleration;
 	
 	std::stack<movementStates> directionStack;
+	movementStates direction;
 
 
 	sf::Vector2f velocity;
@@ -32,6 +33,8 @@ public:
 	std::string getLastDirection() const;
 	const bool getMovingState(const short unsigned state) const;
 	std::stack<movementStates>* getDirectionStack();
+	void setDirection(movementStates direction);
+	movementStates getDirection();
 
 
 	//Functions
