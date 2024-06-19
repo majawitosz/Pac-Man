@@ -5,7 +5,7 @@ Tile::Tile() : isWall(false), isTunnel(false)
 {
 }
 
-Tile::Tile(float x, float y, float gridSizeF, bool isWall, bool isTunnel): isWall(isWall), isTunnel(isTunnel)
+Tile::Tile(float x, float y, float gridSizeF, bool isWall, bool isTunnel, int col, int row): isWall(isWall), isTunnel(isTunnel)
 {
 	
 	this->shape.setSize(sf::Vector2f(gridSizeF, gridSizeF));

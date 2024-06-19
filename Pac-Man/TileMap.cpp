@@ -22,7 +22,7 @@ TileMap::TileMap()
 			for (size_t z = 0; z < this->layers; z++)
 			{
 				this->map[x][y].resize(this->layers);
-				this->map[x][y].push_back(Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, 0, 0));
+				this->map[x][y].push_back(Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, 0, 0, x, y));
 			}
 		}
 	}
@@ -59,7 +59,7 @@ void TileMap::loadMapFromFile(const std::string& filePath)
 		{
 			bool isWall = (line[x] == '1');
 			bool isTunnel = (line[x] == '2');
-			this->map[x][y][0] = Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, isWall, isTunnel);
+			this->map[x][y][0] = Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, isWall, isTunnel, x, y);
 			
 		}
 		++y;

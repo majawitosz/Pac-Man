@@ -9,10 +9,13 @@ protected:
 	sf::RectangleShape shape;
 	bool isWall;
 	bool isTunnel;
+	int col;
+	int row;
+	int path;
 
 public:
 	Tile();
-	Tile(float x, float y, float gridSizeF, bool isWall, bool isTunnel);
+	Tile(float x, float y, float gridSizeF, bool isWall, bool isTunnel, int col, int row);
 	virtual ~Tile();
 
 	//Function

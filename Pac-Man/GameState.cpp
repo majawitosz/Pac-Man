@@ -32,11 +32,16 @@ void GameState::initTextures()
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_MAP_TEXTURE";
 	}
+	if (!this->textures["RED_GHOST"].loadFromFile("Resources/Images/Ghosts/ghost.png")) 
+	{
+		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_GHOST_TEXTURE";
+	}
 }
 
 void GameState::initPlayers()
 {
 	this->player = new Player(225, 370, this->textures["PLAYER_SHEET"]);
+	this->ghost = new Ghosts(220, 180, this->textures["RED_GHOST"]);
 }
 
 void GameState::initMapBackground()
@@ -366,6 +371,7 @@ void GameState::update(const float& dt)
 	this->updateMousePosition();
 	this->movementManager(dt);
 	this->updateInput(dt);
+	this->ghost->moveGhost(dt, map);
 	
 	
 	this->player->update(dt);
@@ -381,6 +387,7 @@ void GameState::render(sf::RenderTarget* target)
 	target->draw(this->mapImage);
 
 	this->player->render(*target);
+	this->ghost->render(*target);
 
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);

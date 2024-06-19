@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 #include "TileMap.h"
+#include "Ghosts.h"
 
 
 
@@ -9,6 +10,7 @@ class GameState : public State
 private:
 	Player* player;
 	TileMap map;
+	Ghosts* ghost;
 	sf::Sprite mapImage;
 	sf::Font font;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
@@ -28,6 +30,7 @@ public:
 	virtual ~GameState();
 
 	//Functions
+	sf::FloatRect getGhostPosition();
 	bool checkMapPlayerIntersect();
 	void collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds);
 	bool teleportLeft();
