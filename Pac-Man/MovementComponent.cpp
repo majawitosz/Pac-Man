@@ -5,7 +5,7 @@ MovementComponent::MovementComponent(sf::Sprite& sprite,
 	float maxVelocity, float acceleration, float deceleration)
 	: sprite(sprite), maxVelocity(maxVelocity), acceleration(acceleration), deceleration(deceleration), velocity(0.f, 0.f)
 {
-	this->directionStack.push(IDLE);
+	this->direction = IDLE;
 }
 
 MovementComponent::~MovementComponent()
@@ -24,6 +24,8 @@ void MovementComponent::stopVelocity()
 	this->velocity.x = 0.f;
 	this->velocity.y = 0.f;
 }
+
+
 
 
 const bool MovementComponent::getMovingState(const short unsigned state) const
@@ -63,6 +65,24 @@ const bool MovementComponent::getMovingState(const short unsigned state) const
 	return false;
 }
 
+std::stack<movementStates>* MovementComponent::getDirectionStack()
+{
+	if (!this->directionStack.empty()) {
+		return &directionStack;
+	}
+	return nullptr;
+}
+
+void MovementComponent::setDirection(movementStates direction)
+{
+	this->direction = direction;
+}
+
+movementStates MovementComponent::getDirection()
+{
+	return this->direction;
+}
+
 
 
 
@@ -83,8 +103,7 @@ std::string MovementComponent::getLastDirection() const
 			break;
 		case 4:
 			lastDirection = "DOWN";
-		default:
-			break;
+		
 		}
 	return lastDirection;
 	
@@ -116,3 +135,7 @@ void MovementComponent::addDirectionToStack(movementStates direction)
 {
 	this->directionStack.push(direction);
 }
+
+
+
+

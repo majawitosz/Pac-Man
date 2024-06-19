@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GameState.h"
 
 
@@ -36,7 +36,7 @@ void GameState::initTextures()
 
 void GameState::initPlayers()
 {
-	this->player = new Player(230, 400, this->textures["PLAYER_SHEET"]);
+	this->player = new Player(225, 370, this->textures["PLAYER_SHEET"]);
 }
 
 void GameState::initMapBackground()
@@ -45,6 +45,7 @@ void GameState::initMapBackground()
 
 		
 }
+
 void GameState::initFonts()
 {
 	if (!this->font.loadFromFile("Fonts/Minecraft.ttf")) {
@@ -75,11 +76,8 @@ GameState::~GameState()
 	delete this->player;
 }
 
-
-void GameState::checkMapPlayerIntersect(const float& dt)
+bool GameState::checkMapPlayerIntersect()
 {
-
-	//sf::FloatRect playerBounds = this->player->getHitboxBounds();
 	sf::FloatRect playerBounds = this->player->getPosition();
 
 	for (auto& x : this->map.getMap())
@@ -91,110 +89,285 @@ void GameState::checkMapPlayerIntersect(const float& dt)
 				if (z.getIsWall() && z.getGlobalBounds().intersects(playerBounds))
 				{
 					sf::FloatRect wallBounds = z.getGlobalBounds();
-					this->collisionManagement(playerBounds, wallBounds, dt);
+					this->collisionManagement(playerBounds, wallBounds);
+					return true;
 				
-
 				}
 			}
 		}
 	}
+	return false;
 }
 
-void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds, const float& dt)
-{
+int roundToNearestMultipleOf16(int num) {
+	int lowerMultiple = (num / 16) * 16;
+	int upperMultiple = ((num + 15) / 16) * 16;
 
+	// Sprawdzenie, która z wielokrotności jest bliżej
+	if (std::abs(num - lowerMultiple) <= std::abs(num - upperMultiple)) {
+		return lowerMultiple;
+	}
+	else {
+		return upperMultiple;
+	}
+}
+
+void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds)
+{
+	
 	// Left
 	if (playerBounds.left < wallBounds.left + wallBounds.width && this->direction == 0)
 	{
-		this->player->setPosition(this->player->getPosition().left + 0.1f, this->player->getPosition().top);
+		int left = static_cast<int>(std::ceil(this->player->getPosition().left));
+		left = roundToNearestMultipleOf16(left) + 3;
+		
+		float left1 = static_cast<float>(left);
+	
 		this->player->getMovementComponent()->stopVelocity();
-		this->canMoveUp = true;
-		this->canMoveDown = true;
-		this->canMoveRight = true;
-		this->canMoveLeft = false;
+		this->player->setPosition(left1, this->player->getPosition().top);
+		//std::cout << "Left: " << left1 << std::endl;
+		isWall = true;
 	}
 	// Right
-	else if ((playerBounds.left + playerBounds.width) > wallBounds.left && this->direction == 1)
+	if ((playerBounds.left + playerBounds.width) > wallBounds.left && this->direction == 1)
 	{
-		this->player->setPosition(this->player->getPosition().left - 0.1f, this->player->getPosition().top);
+		int right = static_cast<int>(std::floor(this->player->getPosition().left));
+		right = roundToNearestMultipleOf16(right) + 3;
+		float right1 = static_cast<float>(right);
+	
 		this->player->getMovementComponent()->stopVelocity();
-		this->canMoveUp = true;
-		this->canMoveDown = true;
-		this->canMoveRight = false;
-		this->canMoveLeft = true;
+		this->player->setPosition(right1, this->player->getPosition().top);
+		//std::cout << "Right: " << right1 << std::endl;
+		isWall = true;
 	}
 
 	// Up
 	if (playerBounds.top > wallBounds.top - wallBounds.height && this->direction == 2)
 	{
-		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top + 0.1f);
+		int up = static_cast<int>(std::ceil(this->player->getPosition().top));
+		up = roundToNearestMultipleOf16(up) + 3;
+		float up1 = static_cast<float>(up);
+		
 		this->player->getMovementComponent()->stopVelocity();
-		this->canMoveUp = false;
-		this->canMoveDown = true;
-		this->canMoveRight = true;
-		this->canMoveLeft = true;
+		this->player->setPosition(this->player->getPosition().left, up1);
+		isWall = true;
+		//std::cout << "Up: " << up1 << std::endl;
 	}
 	// Down
-	else if (playerBounds.top + playerBounds.height > wallBounds.top && this->direction == 3)
+	if (playerBounds.top + playerBounds.height > wallBounds.top && this->direction == 3)
 	{
-		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top - 0.1f);
+		int down = static_cast<int>(std::floor(this->player->getPosition().top));
+		down = roundToNearestMultipleOf16(down) + 3;
+		float down1 = static_cast<float>(down);
+		
 		this->player->getMovementComponent()->stopVelocity();
-		this->canMoveUp = true;
-		this->canMoveDown = false;
-		this->canMoveRight = true;
-		this->canMoveLeft = true;
+		this->player->setPosition(this->player->getPosition().left, down1);
+		isWall = true;
+		//std::cout << "Down: " << down1 << std::endl;
 	}
+	isWall = false;
 }
 
-void GameState::resetCollisions()
+bool GameState::teleportLeft()
 {
-	this->canMoveUp = true;
-	this->canMoveDown = true;
-	this->canMoveRight = true;
-	this->canMoveLeft = true;
+	sf::FloatRect playerBounds = this->player->getPosition();
+	sf::FloatRect nextPosition = this->player->getPosition();
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsTunnel() && z.getGlobalBounds().intersects(playerBounds))
+				{
+					if(z.getGlobalBounds().left < playerBounds.left)
+						nextPosition.left = this->map.getWidth() - playerBounds.left - 1;
+						this->player->setPosition(nextPosition.left, nextPosition.top);
+					return true;
+				}
+				
+			}
+		}
+	}
+	
+	return false;
 }
+
+bool GameState::teleportRight()
+{
+	sf::FloatRect playerBounds = this->player->getPosition();
+	sf::FloatRect nextPosition = this->player->getPosition();
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsTunnel() && z.getGlobalBounds().intersects(playerBounds))
+				{
+					if (z.getGlobalBounds().left > playerBounds.left)
+						nextPosition.left = 1;
+					this->player->setPosition(nextPosition.left, nextPosition.top);
+					return true;
+				}
+
+			}
+		}
+	}
+
+	return false;
+}
+
+
+bool GameState::checkMoveLeft()
+{
+	
+	sf::FloatRect nextPosition = this->player->getPosition();
+	nextPosition.left -= nextPosition.width;
+
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsWall() && z.getGlobalBounds().intersects(nextPosition))
+				{	
+					return false;
+				}
+			}
+		}
+	}
+	
+	return true;
+}
+bool GameState::checkMoveRight()
+{
+	sf::FloatRect nextPosition = this->player->getPosition();
+	nextPosition.left += nextPosition.width;
+
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsWall() && z.getGlobalBounds().intersects(nextPosition))
+				{
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+bool GameState::checkMoveUp()
+{
+	sf::FloatRect nextPosition = this->player->getPosition();
+	nextPosition.top -= nextPosition.height;
+	
+
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsWall() && z.getGlobalBounds().intersects(nextPosition))
+				{
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+bool GameState::checkMoveDown()
+{
+	sf::FloatRect nextPosition = this->player->getPosition();
+	nextPosition.top += nextPosition.width;
+
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsWall() && z.getGlobalBounds().intersects(nextPosition))
+				{
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
 
 void GameState::updateInput(const float& dt)
 {
-
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT"))) && this->canMoveLeft) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
 		this->direction = 0;
-		this->player->getMovementComponent()->addDirectionToStack(MOVING_LEFT);
-		this->player->move(-1.f, 0.f, dt);
-		this->resetCollisions();
+		this->player->getMovementComponent()->setDirection(MOVING_LEFT);
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))) && this->canMoveRight) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT")))) {
 		this->direction = 1;
-		this->player->getMovementComponent()->addDirectionToStack(MOVING_RIGHT);
-		this->player->move(1.f, 0.f, dt);
-		this->resetCollisions();
+		this->player->getMovementComponent()->setDirection(MOVING_RIGHT);
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))) && this->canMoveUp) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP")))) {
 		this->direction = 2;
-		this->player->getMovementComponent()->addDirectionToStack(MOVING_UP);
-		this->player->move(0.f, -1.f, dt);
-		this->resetCollisions();
+		this->player->getMovementComponent()->setDirection(MOVING_UP);
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))) && this->canMoveDown) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN")))) {
 		this->direction = 3;
-		this->player->getMovementComponent()->addDirectionToStack(MOVING_DOWN);
-		this->player->move(0.f, 1.f, dt);
-		this->resetCollisions();
+		this->player->getMovementComponent()->setDirection(MOVING_DOWN);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE")))) {
 		this->endState();
+	}		
+}
+
+void GameState::movementManager(const float& dt)
+{
+	if (!this->checkMapPlayerIntersect() && !isWall ) {
+		switch (this->player->getMovementComponent()->getDirection())
+		{
+		case 1:
+			if (this->checkMoveLeft()) {
+				this->teleportLeft();
+				this->player->move(-1.f, 0.f, dt);
+			}
+			break;
+		case 2:
+			if (this->checkMoveRight()) {
+				this->teleportRight();
+				this->player->move(1.f, 0.f, dt);
+			}
+			break;
+		case 3:
+			if (this->checkMoveUp()) {
+				this->player->move(0.f, -1.f, dt);
+			}
+			break;
+		case 4:
+			if (this->checkMoveDown()) {
+				this->player->move(0.f, 1.f, dt);
+			}
+			break;
+		default:
+			break;
+		}
 	}
-		
 		
 }
 
 void GameState::update(const float& dt)
 {
 	this->updateMousePosition();
-	this->checkMapPlayerIntersect(dt);
+	this->movementManager(dt);
 	this->updateInput(dt);
-
+	
+	
 	this->player->update(dt);
 }
 
@@ -205,7 +378,7 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->map.render(*target);
 	
-	//target->draw(this->mapImage);
+	target->draw(this->mapImage);
 
 	this->player->render(*target);
 

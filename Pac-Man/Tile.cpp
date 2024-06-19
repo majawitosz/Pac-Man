@@ -1,19 +1,23 @@
 #include "stdafx.h"
 #include "Tile.h"
 
-Tile::Tile() : isWall(false)
+Tile::Tile() : isWall(false), isTunnel(false)
 {
 }
 
-Tile::Tile(float x, float y, float gridSizeF, bool isWall): isWall(isWall)
+Tile::Tile(float x, float y, float gridSizeF, bool isWall, bool isTunnel): isWall(isWall), isTunnel(isTunnel)
 {
 	
 	this->shape.setSize(sf::Vector2f(gridSizeF, gridSizeF));
 
 	if (this->isWall)
 		this->shape.setFillColor(sf::Color::Blue);
+	else if (this->isTunnel)
+		this->shape.setFillColor(sf::Color::Cyan);
 	else
 		this->shape.setFillColor(sf::Color::Transparent);
+
+
 
 	//this->shape.setFillColor(sf::Color::Blue);
 	this->shape.setOutlineThickness(1.f);
@@ -32,6 +36,11 @@ Tile::~Tile()
 bool Tile::getIsWall() const
 {
 	return this->isWall;
+}
+
+bool Tile::getIsTunnel() const
+{
+	return this->isTunnel;
 }
 
 sf::FloatRect Tile::getGlobalBounds() const
