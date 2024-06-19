@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GameState.h"
 
 
@@ -99,6 +99,19 @@ bool GameState::checkMapPlayerIntersect()
 	return false;
 }
 
+int roundToNearestMultipleOf16(int num) {
+	int lowerMultiple = (num / 16) * 16;
+	int upperMultiple = ((num + 15) / 16) * 16;
+
+	// Sprawdzenie, która z wielokrotności jest bliżej
+	if (std::abs(num - lowerMultiple) <= std::abs(num - upperMultiple)) {
+		return lowerMultiple;
+	}
+	else {
+		return upperMultiple;
+	}
+}
+
 void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds)
 {
 	
@@ -106,22 +119,25 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 	if (playerBounds.left < wallBounds.left + wallBounds.width && this->direction == 0)
 	{
 		int left = static_cast<int>(std::ceil(this->player->getPosition().left));
+		left = roundToNearestMultipleOf16(left) + 3;
+		
 		float left1 = static_cast<float>(left);
 	
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(left1, this->player->getPosition().top);
-		
+		//std::cout << "Left: " << left1 << std::endl;
 		isWall = true;
 	}
 	// Right
 	if ((playerBounds.left + playerBounds.width) > wallBounds.left && this->direction == 1)
 	{
-		int right = static_cast<int>(std::floor(this->player->getPosition().left ));
+		int right = static_cast<int>(std::floor(this->player->getPosition().left));
+		right = roundToNearestMultipleOf16(right) + 3;
 		float right1 = static_cast<float>(right);
 	
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(right1, this->player->getPosition().top);
-	
+		//std::cout << "Right: " << right1 << std::endl;
 		isWall = true;
 	}
 
@@ -129,21 +145,25 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 	if (playerBounds.top > wallBounds.top - wallBounds.height && this->direction == 2)
 	{
 		int up = static_cast<int>(std::ceil(this->player->getPosition().top));
+		up = roundToNearestMultipleOf16(up) + 3;
 		float up1 = static_cast<float>(up);
 		
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(this->player->getPosition().left, up1);
 		isWall = true;
+		//std::cout << "Up: " << up1 << std::endl;
 	}
 	// Down
 	if (playerBounds.top + playerBounds.height > wallBounds.top && this->direction == 3)
 	{
 		int down = static_cast<int>(std::floor(this->player->getPosition().top));
+		down = roundToNearestMultipleOf16(down) + 3;
 		float down1 = static_cast<float>(down);
 		
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(this->player->getPosition().left, down1);
 		isWall = true;
+		//std::cout << "Down: " << down1 << std::endl;
 	}
 	isWall = false;
 }
