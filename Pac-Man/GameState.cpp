@@ -36,7 +36,7 @@ void GameState::initTextures()
 
 void GameState::initPlayers()
 {
-	this->player = new Player(230, 400, this->textures["PLAYER_SHEET"]);
+	this->player = new Player(225, 370, this->textures["PLAYER_SHEET"]);
 }
 
 void GameState::initMapBackground()
@@ -45,6 +45,7 @@ void GameState::initMapBackground()
 
 		
 }
+
 void GameState::initFonts()
 {
 	if (!this->font.loadFromFile("Fonts/Minecraft.ttf")) {
@@ -75,7 +76,6 @@ GameState::~GameState()
 	delete this->player;
 }
 
-
 bool GameState::checkMapPlayerIntersect()
 {
 	sf::FloatRect playerBounds = this->player->getPosition();
@@ -105,33 +105,97 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 	// Left
 	if (playerBounds.left < wallBounds.left + wallBounds.width && this->direction == 0)
 	{
+		int left = static_cast<int>(std::ceil(this->player->getPosition().left));
+		float left1 = static_cast<float>(left);
+	
 		this->player->getMovementComponent()->stopVelocity();
-		this->player->setPosition(this->player->getPosition().left + 0.1f, this->player->getPosition().top);
+		this->player->setPosition(left1, this->player->getPosition().top);
+		
 		isWall = true;
 	}
 	// Right
-	else if ((playerBounds.left + playerBounds.width) > wallBounds.left && this->direction == 1)
+	if ((playerBounds.left + playerBounds.width) > wallBounds.left && this->direction == 1)
 	{
+		int right = static_cast<int>(std::floor(this->player->getPosition().left ));
+		float right1 = static_cast<float>(right);
+	
 		this->player->getMovementComponent()->stopVelocity();
-		this->player->setPosition(this->player->getPosition().left - 0.1f, this->player->getPosition().top);
+		this->player->setPosition(right1, this->player->getPosition().top);
+	
 		isWall = true;
 	}
 
 	// Up
-	else if (playerBounds.top > wallBounds.top - wallBounds.height && this->direction == 2)
+	if (playerBounds.top > wallBounds.top - wallBounds.height && this->direction == 2)
 	{
+		int up = static_cast<int>(std::ceil(this->player->getPosition().top));
+		float up1 = static_cast<float>(up);
+		
 		this->player->getMovementComponent()->stopVelocity();
-		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top + 0.1f);
+		this->player->setPosition(this->player->getPosition().left, up1);
 		isWall = true;
 	}
 	// Down
-	else if (playerBounds.top + playerBounds.height > wallBounds.top && this->direction == 3)
+	if (playerBounds.top + playerBounds.height > wallBounds.top && this->direction == 3)
 	{
+		int down = static_cast<int>(std::floor(this->player->getPosition().top));
+		float down1 = static_cast<float>(down);
+		
 		this->player->getMovementComponent()->stopVelocity();
-		this->player->setPosition(this->player->getPosition().left, this->player->getPosition().top - 0.1f);
+		this->player->setPosition(this->player->getPosition().left, down1);
 		isWall = true;
 	}
 	isWall = false;
+}
+
+bool GameState::teleportLeft()
+{
+	sf::FloatRect playerBounds = this->player->getPosition();
+	sf::FloatRect nextPosition = this->player->getPosition();
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsTunnel() && z.getGlobalBounds().intersects(playerBounds))
+				{
+					if(z.getGlobalBounds().left < playerBounds.left)
+						nextPosition.left = this->map.getWidth() - playerBounds.left - 1;
+						this->player->setPosition(nextPosition.left, nextPosition.top);
+					return true;
+				}
+				
+			}
+		}
+	}
+	
+	return false;
+}
+
+bool GameState::teleportRight()
+{
+	sf::FloatRect playerBounds = this->player->getPosition();
+	sf::FloatRect nextPosition = this->player->getPosition();
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsTunnel() && z.getGlobalBounds().intersects(playerBounds))
+				{
+					if (z.getGlobalBounds().left > playerBounds.left)
+						nextPosition.left = 1;
+					this->player->setPosition(nextPosition.left, nextPosition.top);
+					return true;
+				}
+
+			}
+		}
+	}
+
+	return false;
 }
 
 
@@ -250,11 +314,13 @@ void GameState::movementManager(const float& dt)
 		{
 		case 1:
 			if (this->checkMoveLeft()) {
+				this->teleportLeft();
 				this->player->move(-1.f, 0.f, dt);
 			}
 			break;
 		case 2:
 			if (this->checkMoveRight()) {
+				this->teleportRight();
 				this->player->move(1.f, 0.f, dt);
 			}
 			break;
@@ -278,8 +344,9 @@ void GameState::movementManager(const float& dt)
 void GameState::update(const float& dt)
 {
 	this->updateMousePosition();
-	this->updateInput(dt);
 	this->movementManager(dt);
+	this->updateInput(dt);
+	
 	
 	this->player->update(dt);
 }

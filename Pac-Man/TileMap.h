@@ -17,7 +17,7 @@ public:
 
 	// Accessor function
 	const std::vector<std::vector<std::vector<Tile>>>& getMap() const;
-
+	const float getWidth() const;
 
 	//Functions
 	void loadMapFromFile(const std::string& filePath);

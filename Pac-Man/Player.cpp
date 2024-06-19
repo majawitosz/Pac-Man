@@ -19,7 +19,7 @@ Player::Player(float x, float y, sf::Texture& texture)
 	this->initVariables();
 
 	this->setPosition(x, y);
-	this->sprite.setScale(0.8f, 0.8f);
+	this->sprite.setScale(0.75f, 0.75f);
 	
 	this->createhitboxComponent(this->sprite, 2.8f, 2.8f, 20.f , 20.f);
 	this->createMovementComponent(100.f, 5.f, 3.f);

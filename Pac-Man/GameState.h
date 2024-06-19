@@ -30,7 +30,9 @@ public:
 	//Functions
 	bool checkMapPlayerIntersect();
 	void collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds);
-	
+	bool teleportLeft();
+	bool teleportRight();
+
 	bool checkMoveLeft();
 	bool checkMoveRight();
 	bool checkMoveUp();
