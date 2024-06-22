@@ -3,11 +3,11 @@
 
 TileMap::TileMap()
 {
-	this->gridSizeF = 16.f;
+	this->gridSizeF = 16.f; //16.f
 	this->gridSizeU = static_cast<unsigned>(this->gridSizeF);
 	this->maxSize.x = 29; //224
 	this->maxSize.y = 32; //248
-	this->layers = 3;
+	this->layers = 1;
 
 	this->map.resize(this->maxSize.x);
 	for (size_t x = 0; x < this->maxSize.x; x++)
@@ -23,6 +23,7 @@ TileMap::TileMap()
 			{
 				this->map[x][y].resize(this->layers);
 				this->map[x][y].push_back(Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, 0, 0, x, y));
+				
 			}
 		}
 	}
@@ -44,6 +45,16 @@ const float TileMap::getWidth() const
 	return this->gridSizeF * this->maxSize.x;
 }
 
+const float TileMap::getHeight() const
+{
+	return this->gridSizeF * this->maxSize.y;
+}
+
+const float TileMap::getGridSizeF() const
+{
+	return this->gridSizeF;
+}
+
 void TileMap::loadMapFromFile(const std::string& filePath)
 {
 	std::ifstream file(filePath);
@@ -60,13 +71,31 @@ void TileMap::loadMapFromFile(const std::string& filePath)
 			bool isWall = (line[x] == '1');
 			bool isTunnel = (line[x] == '2');
 			this->map[x][y][0] = Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, isWall, isTunnel, x, y);
-			
+			//std::cout << x << " " << y << std::endl;
 		}
 		++y;
 	}
 
 	file.close();
 
+}
+
+Tile* TileMap::getTileByCoor(std::pair<int, int> coor)
+{
+	for (auto& x : this->map)
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getCoordinates() == coor) {
+					return &z;
+				}
+
+			}
+		}
+	}
+	//return &Tile();
 }
 
 
@@ -88,6 +117,67 @@ void TileMap::render(sf::RenderTarget& target)
 			}
 		}
 	}
+}
+
+std::set<std::pair<int, int>> convertToSet(const std::vector<std::pair<int, int>>& steps) {
+	return std::set<std::pair<int, int>>(steps.begin(), steps.end());
+}
+
+bool getCoor(std::vector<std::pair<int, int>> steps, std::pair<int, int> step) {
+
+	for (int i = 0; i < steps.size(); i++)
+	{
+		if (steps[i] == step) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
+void TileMap::printMap(sf::FloatRect playerPosition, sf::FloatRect ghostPosition, std::vector<std::pair<int, int>> steps) {
+	std::set<std::pair<int, int>> stepSet = convertToSet(steps);
+	
+	for (size_t y = 0; y < this->maxSize.y; y++) {
+		for (size_t x = 0; x < this->maxSize.x; x++) {
+			// Assuming there's only one layer (z = 0)
+			std::pair<int, int> currentCoordinates = this->map[x][y][0].getCoordinates();
+			
+			if (this->map[x][y][0].getIsWall()) {
+				std::cout << std::setw(4) << "* ";
+			}
+			else if (this->map[x][y][0].getGlobalBounds().intersects(playerPosition) )
+			{
+				std::cout << std::setw(3) << "P ";
+			}
+			else if (this->map[x][y][0].getGlobalBounds().intersects(ghostPosition) )
+			{
+				std::cout << std::setw(3) << "G ";
+			}
+			else if (getCoor(steps, this->map[x][y][0].getCoordinates())) {
+				std::cout << std::setw(3) << "A ";
+			}
+			else {
+				std::cout << std::setw(3) << this->map[x][y][0].getPath() << " ";
+			}
+		}
+		std::cout << std::endl;
+	}
+}
+
+void TileMap::clearPath()
+{
+	for (auto& x : this->map)
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				z.setPath(0);
+			}
+		}
+	}
+
 }
 
 //Functions

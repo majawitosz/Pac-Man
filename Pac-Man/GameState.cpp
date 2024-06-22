@@ -36,12 +36,18 @@ void GameState::initTextures()
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_GHOST_TEXTURE";
 	}
+	if (!this->textures["BLUE_GHOST"].loadFromFile("Resources/Images/Ghosts/blue_ghost.png"))
+	{
+		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_GHOST_TEXTURE";
+	}
 }
 
 void GameState::initPlayers()
 {
 	this->player = new Player(225, 370, this->textures["PLAYER_SHEET"]);
-	this->ghost = new Ghosts(220, 180, this->textures["RED_GHOST"]);
+	this->blueGhost = new Ghosts(220, 220, this->textures["BLUE_GHOST"], this->map);
+	this->ghost = new Ghosts(220, 180, this->textures["RED_GHOST"], this->map);
+	
 }
 
 void GameState::initMapBackground()
@@ -121,7 +127,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 {
 	
 	// Left
-	if (playerBounds.left < wallBounds.left + wallBounds.width && this->direction == 0)
+	if (playerBounds.left < wallBounds.left + wallBounds.width && this->player->getMovementComponent()->getDirection() == MOVING_LEFT)
 	{
 		int left = static_cast<int>(std::ceil(this->player->getPosition().left));
 		left = roundToNearestMultipleOf16(left) + 3;
@@ -132,6 +138,9 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 		this->player->setPosition(left1, this->player->getPosition().top);
 		//std::cout << "Left: " << left1 << std::endl;
 		isWall = true;
+		//if (this->ghost->findPath(map, this->player->getPosition()))
+		//	this->foundPath = true;
+		
 	}
 	// Right
 	if ((playerBounds.left + playerBounds.width) > wallBounds.left && this->direction == 1)
@@ -223,11 +232,194 @@ bool GameState::teleportRight()
 	return false;
 }
 
+void GameState::moveRedGhost(const float& dt)
+{
 
-bool GameState::checkMoveLeft()
+	
+	//wszytsko w if Ghost found Player jak tak to wyowalnie funkcji
+	if (!this->ghost->hasReachedTarget(dt)) {
+		switch (this->ghost->getMovementComponent()->getDirection())
+		{
+		case 1:
+			this->ghost->move(-1.f, 0.f, dt);
+			break;
+		default:
+			//this->ghost->getMovementComponent()->stopVelocity();
+			break;
+		}
+	}
+	
+
+}
+
+void GameState::updateRedGhost()
+{
+	/*switch (this->ghost->setRedGhostDirection()) {
+	case 1:
+		this->ghost->getMovementComponent()->setDirection(MOVING_LEFT);
+		break;
+	case 2:
+		this->ghost->getMovementComponent()->setDirection(MOVING_RIGHT);
+		break;
+	case 3: 
+		this->ghost->getMovementComponent()->setDirection(MOVING_UP);
+		break;
+	case 4:
+		this->ghost->getMovementComponent()->setDirection(MOVING_DOWN);
+		break;
+	default:
+		break;
+	}*/
+	
+	
+}
+
+bool GameState::checkMapGhostIntersect(Ghosts* ghost)
+{
+
+	sf::FloatRect ghostBounds = ghost->getPosition();
+
+	for (auto& x : this->map.getMap())
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
+			{
+				if (z.getIsWall() && z.getGlobalBounds().intersects(ghostBounds))
+				{
+					//std::cout << "sciana";
+					sf::FloatRect wallBounds = z.getGlobalBounds();
+					//this->blueGhost->setGhostDirection(0, 3);
+					this->ghostCollisionManagement(ghostBounds, wallBounds);
+					return true;
+
+				}
+			}
+		}
+	}
+	return false;
+}
+
+void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds)
 {
 	
-	sf::FloatRect nextPosition = this->player->getPosition();
+	if (ghostBounds.left < wallBounds.left + wallBounds.width && this->blueGhost->getMovementComponent()->getDirection() == MOVING_LEFT)
+	{
+		int left = static_cast<int>(std::ceil(this->blueGhost->getPosition().left));
+		left = roundToNearestMultipleOf16(left) + 3;
+
+		float left1 = static_cast<float>(left);
+
+		this->blueGhost->getMovementComponent()->stopVelocity();
+		this->blueGhost->setPosition(left1, this->blueGhost->getPosition().top);
+		std::cout << "Left: " << left1 << std::endl;
+		isWall = true;
+		//if (this->ghost->findPath(map, this->player->getPosition()))
+		//	this->foundPath = true;
+		this->blueGhost->setGhostDirection(0, 3,0);
+	}
+	// Right
+	if ((ghostBounds.left + ghostBounds.width) > wallBounds.left && this->blueGhost->getMovementComponent()->getDirection() == MOVING_RIGHT)
+	{
+		int right = static_cast<int>(std::floor(this->blueGhost->getPosition().left));
+		right = roundToNearestMultipleOf16(right) + 3;
+		float right1 = static_cast<float>(right);
+
+		this->blueGhost->getMovementComponent()->stopVelocity();
+		this->blueGhost->setPosition(right1, this->blueGhost->getPosition().top);
+		std::cout << "Right: " << right1 << std::endl;
+		isWall = true;
+		this->blueGhost->setGhostDirection(0, 3, 1);
+	}
+
+	// Up
+	if (ghostBounds.top > wallBounds.top - wallBounds.height && this->blueGhost->getMovementComponent()->getDirection() == MOVING_UP)
+	{
+		int up = static_cast<int>(std::ceil(this->blueGhost->getPosition().top));
+		up = roundToNearestMultipleOf16(up) + 3;
+		float up1 = static_cast<float>(up);
+
+		this->blueGhost->getMovementComponent()->stopVelocity();
+		this->blueGhost->setPosition(this->blueGhost->getPosition().left, up1);
+		isWall = true;
+		std::cout << "Up: " << up1 << std::endl;
+		this->blueGhost->setGhostDirection(0, 3, 2);
+	}
+	// Down
+	if (ghostBounds.top + ghostBounds.height > wallBounds.top && this->blueGhost->getMovementComponent()->getDirection() == MOVING_DOWN)
+	{
+		int down = static_cast<int>(std::floor(this->blueGhost->getPosition().top));
+		down = roundToNearestMultipleOf16(down) + 3;
+		float down1 = static_cast<float>(down);
+
+		this->blueGhost->getMovementComponent()->stopVelocity();
+		this->blueGhost->setPosition(this->blueGhost->getPosition().left, down1);
+		isWall = true;
+		std::cout << "Down: " << down1 << std::endl;
+		this->blueGhost->setGhostDirection(0, 3 ,3);
+	}
+	isWall = false;
+	
+}
+
+
+
+void GameState::moveGhost(const float& dt)
+{
+	if (!checkIfGhostMoves()) {
+		this->blueGhost->setGhostDirection(0, 3, 5);
+	}
+	if (!this->checkMapGhostIntersect(this->blueGhost) && !isWall) {
+		//this->updateGhost(dt);
+
+		switch (this->blueGhost->getMovementComponent()->getDirection())
+		{
+		case 1:
+			if (this->checkMoveLeft(this->blueGhost)) {
+				//this->teleportLeft();
+				this->blueGhost->move(-1.f, 0.f, dt);
+			}
+			break;
+		case 2:
+			if (this->checkMoveRight(this->blueGhost)) {
+				//this->teleportRight();
+				this->blueGhost->move(1.f, 0.f, dt);
+			}
+			break;
+		case 3:
+			if (this->checkMoveUp(this->blueGhost)) {
+				this->blueGhost->move(0.f, -1.f, dt);
+			}
+			break;
+		case 4:
+			if (this->checkMoveDown(this->blueGhost)) {
+				this->blueGhost->move(0.f, 1.f, dt);
+			}
+			break;
+		default:
+			
+			break;
+		}
+
+	}
+	//else {
+	//	this->blueGhost->setGhostDirection(0, 3);
+	//}
+
+}
+
+void GameState::updateGhost(const float& dt)
+{
+	//this->blueGhost->setGhostDirection();
+}
+
+
+
+
+bool GameState::checkMoveLeft(Entity *entity)
+{
+	
+	sf::FloatRect nextPosition = entity->getPosition();
 	nextPosition.left -= nextPosition.width;
 
 	for (auto& x : this->map.getMap())
@@ -246,9 +438,9 @@ bool GameState::checkMoveLeft()
 	
 	return true;
 }
-bool GameState::checkMoveRight()
+bool GameState::checkMoveRight(Entity* entity)
 {
-	sf::FloatRect nextPosition = this->player->getPosition();
+	sf::FloatRect nextPosition = entity->getPosition();
 	nextPosition.left += nextPosition.width;
 
 	for (auto& x : this->map.getMap())
@@ -266,9 +458,9 @@ bool GameState::checkMoveRight()
 	}
 	return true;
 }
-bool GameState::checkMoveUp()
+bool GameState::checkMoveUp(Entity* entity)
 {
-	sf::FloatRect nextPosition = this->player->getPosition();
+	sf::FloatRect nextPosition = entity->getPosition();
 	nextPosition.top -= nextPosition.height;
 	
 
@@ -287,9 +479,9 @@ bool GameState::checkMoveUp()
 	}
 	return true;
 }
-bool GameState::checkMoveDown()
+bool GameState::checkMoveDown(Entity* entity)
 {
-	sf::FloatRect nextPosition = this->player->getPosition();
+	sf::FloatRect nextPosition = entity->getPosition();
 	nextPosition.top += nextPosition.width;
 
 	for (auto& x : this->map.getMap())
@@ -308,12 +500,21 @@ bool GameState::checkMoveDown()
 	return true;
 }
 
+bool GameState::checkIfGhostMoves()
+{
+	if (this->blueGhost->getMovementComponent()->getVelocity().x == 0.f && this->blueGhost->getMovementComponent()->getVelocity().y == 0.f) {
+		return false;
+	}
+	return true;
+}
+
 
 void GameState::updateInput(const float& dt)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
 		this->direction = 0;
 		this->player->getMovementComponent()->setDirection(MOVING_LEFT);
+		
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT")))) {
 		this->direction = 1;
@@ -322,6 +523,8 @@ void GameState::updateInput(const float& dt)
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP")))) {
 		this->direction = 2;
 		this->player->getMovementComponent()->setDirection(MOVING_UP);
+		this->blueGhost->getMovementComponent()->setDirection(MOVING_UP);
+		
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN")))) {
 		this->direction = 3;
@@ -338,24 +541,24 @@ void GameState::movementManager(const float& dt)
 		switch (this->player->getMovementComponent()->getDirection())
 		{
 		case 1:
-			if (this->checkMoveLeft()) {
+			if (this->checkMoveLeft(this->player)) {
 				this->teleportLeft();
 				this->player->move(-1.f, 0.f, dt);
 			}
 			break;
 		case 2:
-			if (this->checkMoveRight()) {
+			if (this->checkMoveRight(this->player)) {
 				this->teleportRight();
 				this->player->move(1.f, 0.f, dt);
 			}
 			break;
 		case 3:
-			if (this->checkMoveUp()) {
+			if (this->checkMoveUp(this->player)) {
 				this->player->move(0.f, -1.f, dt);
 			}
 			break;
 		case 4:
-			if (this->checkMoveDown()) {
+			if (this->checkMoveDown(this->player)) {
 				this->player->move(0.f, 1.f, dt);
 			}
 			break;
@@ -371,9 +574,16 @@ void GameState::update(const float& dt)
 	this->updateMousePosition();
 	this->movementManager(dt);
 	this->updateInput(dt);
-	this->ghost->moveGhost(dt, map);
 	
+	//this->moveRedGhost(dt);
+	//this->updateRedGhost();
+	// 
+	//this->updateGhost(dt);
+	this->moveGhost(dt);
 	
+	this->blueGhost->update(dt);
+	
+	//this->ghost->update(dt);
 	this->player->update(dt);
 }
 
@@ -384,10 +594,11 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->map.render(*target);
 	
-	target->draw(this->mapImage);
+	//target->draw(this->mapImage);
 
 	this->player->render(*target);
-	this->ghost->render(*target);
+	//this->ghost->render(*target);
+	this->blueGhost->render(*target);
 
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
@@ -398,18 +609,6 @@ void GameState::render(sf::RenderTarget* target)
 	mouseText.setString(ss.str());
 
 	target->draw(mouseText);
-
-	sf::FloatRect playerBounds = this->player->getHitboxBounds();
-	sf::Text playerPosition;
-	playerPosition.setPosition(190.f, 240.f);
-	playerPosition.setFont(this->font);
-	playerPosition.setCharacterSize(12);
-	std::stringstream str;
-	str << playerBounds.left << "  " << playerBounds.top;
-	playerPosition.setString(str.str());
-
-	target->draw(playerPosition);
 	
-
 }
 

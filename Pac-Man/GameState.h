@@ -10,11 +10,15 @@ class GameState : public State
 private:
 	Player* player;
 	TileMap map;
+	Ghosts* blueGhost;
 	Ghosts* ghost;
+	
 	sf::Sprite mapImage;
 	sf::Font font;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
 	bool isWall = false;
+	bool foundPath = false;
+
 	
 	//Initializer functions
 	void initKeybinds();
@@ -30,16 +34,24 @@ public:
 	virtual ~GameState();
 
 	//Functions
-	sf::FloatRect getGhostPosition();
+	//sf::FloatRect getGhostPosition();
 	bool checkMapPlayerIntersect();
 	void collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds);
 	bool teleportLeft();
 	bool teleportRight();
+	void moveRedGhost(const float& dt);
+	void updateRedGhost();
 
-	bool checkMoveLeft();
-	bool checkMoveRight();
-	bool checkMoveUp();
-	bool checkMoveDown();
+	bool checkMapGhostIntersect(Ghosts *ghost);
+	void ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds);
+	void moveGhost(const float& dt);
+	void updateGhost(const float& dt);
+
+	bool checkMoveLeft(Entity *entity);
+	bool checkMoveRight(Entity* entity);
+	bool checkMoveUp(Entity* entity);
+	bool checkMoveDown(Entity* entity);
+	bool checkIfGhostMoves();
 	
 	void updateInput(const float& dt) override;
 	void movementManager(const float& dt);

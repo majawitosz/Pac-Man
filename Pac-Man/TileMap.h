@@ -3,7 +3,7 @@
 #include "Tile.h"
 
 
-class TileMap
+class TileMap 
 {
 private:
 	float gridSizeF;
@@ -18,12 +18,17 @@ public:
 	// Accessor function
 	const std::vector<std::vector<std::vector<Tile>>>& getMap() const;
 	const float getWidth() const;
+	const float getHeight() const;
+	const float getGridSizeF() const;
+	
 
 	//Functions
 	void loadMapFromFile(const std::string& filePath);
-	
+	Tile* getTileByCoor(std::pair<int, int> coor);
 	void update();
 	void render(sf::RenderTarget& target);
+	void printMap(sf::FloatRect playerPosition, sf::FloatRect ghostPosition, std::vector<std::pair<int, int>> steps);
+	void clearPath();
 
 };
 
