@@ -75,6 +75,9 @@
     <ClCompile Include="CollisionComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Ghosts.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="CollisionComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Ghosts.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
