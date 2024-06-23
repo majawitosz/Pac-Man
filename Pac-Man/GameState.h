@@ -11,13 +11,17 @@ private:
 	Player* player;
 	TileMap map;
 	Ghosts* blueGhost;
-	Ghosts* ghost;
+	Ghosts* redGhost;
+	Ghosts* pinkGhost;
+	Ghosts* yellowGhost;
 	
 	sf::Sprite mapImage;
 	sf::Font font;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
 	bool isWall = false;
 	bool foundPath = false;
+	bool startedGhost = false;
+	bool ghostFree = false;
 
 	
 	//Initializer functions
@@ -42,16 +46,19 @@ public:
 	void moveRedGhost(const float& dt);
 	void updateRedGhost();
 
+	void startGhosts();
+
 	bool checkMapGhostIntersect(Ghosts *ghost);
-	void ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds);
-	void moveGhost(const float& dt);
-	void updateGhost(const float& dt);
+	void ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds, Ghosts* ghost);
+	void moveGhost(Ghosts* ghost, const float& dt);
+
 
 	bool checkMoveLeft(Entity *entity);
 	bool checkMoveRight(Entity* entity);
 	bool checkMoveUp(Entity* entity);
 	bool checkMoveDown(Entity* entity);
-	bool checkIfGhostMoves();
+	bool checkIfGhostMoves(Ghosts* ghost);
+
 	
 	void updateInput(const float& dt) override;
 	void movementManager(const float& dt);
