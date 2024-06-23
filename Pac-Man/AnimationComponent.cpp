@@ -17,6 +17,7 @@ AnimationComponent::Animation::Animation
 	this->sprite.setTextureRect(this->startRect);
 
 }
+
 void AnimationComponent::Animation::playRight(const float& dt)
 {
 	//Update timer
@@ -101,6 +102,25 @@ void AnimationComponent::Animation::playDown(const float& dt)
 	}
 }
 
+void AnimationComponent::Animation::playEnd(const float& dt)
+{
+	//Update timer
+	this->timer += 350.f * dt;
+	if (this->timer >= this->animationTimer)
+	{
+		//reset timer
+		this->timer = 0.f;
+		//Animate
+		if (this->currentRect != this->endRect)
+		{
+			this->currentRect.left += this->width;
+		}
+		
+		this->sprite.setTextureRect(this->currentRect);
+	}
+
+}
+
 
 void AnimationComponent::Animation::pause()
 {
@@ -147,15 +167,17 @@ void AnimationComponent::addAnimation(
 
 void AnimationComponent::play(const std::string key, const float& dt)
 {
-	if(key == "IDLE")
+	if (key == "IDLE")
 		this->animations[key]->playRight(dt);
-	else if(key == "RIGHT")
+	else if (key == "RIGHT")
 		this->animations[key]->playRight(dt);
 	else if (key == "LEFT")
 		this->animations[key]->playLeft(dt);
-	else if(key == "UP")
+	else if (key == "UP")
 		this->animations[key]->playUp(dt);
-	else if(key == "DOWN")
+	else if (key == "DOWN")
 		this->animations[key]->playDown(dt);
+	else if (key == "END")
+		this->animations[key]->playEnd(dt);
 }
 

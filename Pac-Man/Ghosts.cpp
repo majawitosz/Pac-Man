@@ -257,7 +257,7 @@ void Ghosts::setGhostDirection(int low, int high, int wallIntersect)
 		this->getMovementComponent()->setDirection(MOVING_DOWN);
 		break;
 	}
-	std::cout << direction << std::endl;
+	
 }
 
 

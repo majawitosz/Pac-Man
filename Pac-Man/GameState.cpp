@@ -24,7 +24,7 @@ void GameState::initKeybinds()
 void GameState::initTextures()
 {
 
-	if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Images/Pac-Man/pm_sheet.png"))
+	if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Images/Pac-Man/pm_sheet1.png"))
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_TEXTURE";
 	}
@@ -48,13 +48,17 @@ void GameState::initTextures()
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_GHOST_TEXTURE";
 	}
+	if (!this->textures["PM_END"].loadFromFile("Resources/Images/Pac-Man/pm_end.png"))
+	{
+		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_END_TEXTURE";
+	}
 
 
 }
 
 void GameState::initPlayers()
 {
-	this->player = new Player(225, 370, this->textures["PLAYER_SHEET"]);
+	this->player = new Player(225, 370, this->textures["PLAYER_SHEET"], this->textures["PM_END"]);
 	this->blueGhost = new Ghosts(220, 220, this->textures["BLUE_GHOST"], this->map);
 	this->redGhost = new Ghosts(220, 220, this->textures["RED_GHOST"], this->map);
 	this->pinkGhost = new Ghosts(220, 220, this->textures["PINK_GHOST"], this->map);
@@ -334,7 +338,7 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(left1, ghost->getPosition().top);
-		std::cout << "Left: " << left1 << std::endl;
+		//std::cout << "Left: " << left1 << std::endl;
 		isWall = true;
 		//if (this->ghost->findPath(map, this->player->getPosition()))
 		//	this->foundPath = true;
@@ -351,7 +355,7 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(right1, ghost->getPosition().top);
-		std::cout << "Right: " << right1 << std::endl;
+		//std::cout << "Right: " << right1 << std::endl;
 		isWall = true;
 		ghost->setGhostDirection(0, 3, 1);
 	}
@@ -366,7 +370,7 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(ghost->getPosition().left, up1);
 		isWall = true;
-		std::cout << "Up: " << up1 << std::endl;
+		//std::cout << "Up: " << up1 << std::endl;
 		if (!this->ghostFree) {
 			ghost->setGhostDirection(0, 1, 3);
 		}
@@ -383,7 +387,7 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(ghost->getPosition().left, down1);
 		isWall = true;
-		std::cout << "Down: " << down1 << std::endl;
+		//std::cout << "Down: " << down1 << std::endl;
 		ghost->setGhostDirection(0, 3 ,3);
 	}
 	isWall = false;
@@ -392,10 +396,13 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 
 void GameState::moveGhost(Ghosts* ghost, const float& dt)
 {
+	if (this->checkPacManGhostCollision(ghost)) {
+		this->stopGame();
+	}
 	if (!checkIfGhostMoves(ghost)) {
 		ghost->setGhostDirection(0, 3, 5);
 	}
-	if (!this->checkMapGhostIntersect(ghost) && !isWall) {
+	if (!this->checkMapGhostIntersect(ghost) && !isWall && !catchedPacMan) {
 		//this->updateGhost(dt);
 
 		switch (ghost->getMovementComponent()->getDirection())
@@ -428,10 +435,34 @@ void GameState::moveGhost(Ghosts* ghost, const float& dt)
 		}
 
 	}
-	//else {
-	//	this->blueGhost->setGhostDirection(0, 3);
-	//}
 
+}
+
+bool GameState::checkPacManGhostCollision(Ghosts* ghost)
+{
+	sf::FloatRect playerPosition = this->player->getHitboxBounds();
+	sf::FloatRect ghostPosition = ghost->getPosition();
+
+	if (playerPosition.intersects(ghostPosition)) {
+		this->catchedPacMan = true;
+		return true;
+	}
+
+	return false;
+}
+
+void GameState::stopGame()
+{
+	if (catchedPacMan) {
+		this->player->getMovementComponent()->stopVelocity();
+		this->blueGhost->getMovementComponent()->stopVelocity();
+		this->redGhost->getMovementComponent()->stopVelocity();
+		this->pinkGhost->getMovementComponent()->stopVelocity();
+		this->yellowGhost->getMovementComponent()->stopVelocity();
+		
+		this->player->getMovementComponent()->setDirection(IDLE);
+		this->player->setEndGame(true);
+	}
 }
 
 
@@ -527,7 +558,6 @@ bool GameState::checkIfGhostMoves(Ghosts* ghost)
 	return true;
 }
 
-
 void GameState::updateInput(const float& dt)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT")))) {
@@ -604,6 +634,7 @@ void GameState::update(const float& dt)
 	this->moveGhost(this->redGhost, dt);
 	this->moveGhost(this->pinkGhost, dt);
 	this->moveGhost(this->yellowGhost, dt);
+
 	
 	this->blueGhost->update(dt);
 	this->redGhost->update(dt);
@@ -623,10 +654,13 @@ void GameState::render(sf::RenderTarget* target)
 	target->draw(this->mapImage);
 
 	this->player->render(*target);
-	this->redGhost->render(*target);
-	this->blueGhost->render(*target);
-	this->pinkGhost->render(*target);
-	this->yellowGhost->render(*target);
+	if (!catchedPacMan) {
+		this->redGhost->render(*target);
+		this->blueGhost->render(*target);
+		this->pinkGhost->render(*target);
+		this->yellowGhost->render(*target);
+	}
+	
 
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);

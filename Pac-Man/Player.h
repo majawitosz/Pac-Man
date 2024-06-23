@@ -7,16 +7,22 @@ class Player :
 {
 private:
     //Variables
-
+    AnimationComponent* endAnimationComponent;
+    bool endGame;
     //Initializaer functions
     void initVariables();
-    void initComponents();
+   
+   
 
 public:
-    Player(float x, float y, sf::Texture& texture);
+    Player(float x, float y, sf::Texture& texture, sf::Texture& endTexture);
     virtual ~Player();
+
+    //Accessors
+    void setEndGame(bool ifEndGame);
+
+
     //Functions
-   
     virtual void update(const float& dt);
 
 };

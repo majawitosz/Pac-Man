@@ -22,6 +22,7 @@ private:
 	bool foundPath = false;
 	bool startedGhost = false;
 	bool ghostFree = false;
+	bool catchedPacMan = false;
 
 	
 	//Initializer functions
@@ -51,7 +52,8 @@ public:
 	bool checkMapGhostIntersect(Ghosts *ghost);
 	void ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds, Ghosts* ghost);
 	void moveGhost(Ghosts* ghost, const float& dt);
-
+	bool checkPacManGhostCollision(Ghosts* ghost);
+	void stopGame();
 
 	bool checkMoveLeft(Entity *entity);
 	bool checkMoveRight(Entity* entity);

@@ -25,6 +25,7 @@ private:
 		void playLeft(const float& dt);
 		void playUp(const float& dt);
 		void playDown(const float& dt);
+		void playEnd(const float& dt);
 		
 		void pause();
 		void reset();
