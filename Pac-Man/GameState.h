@@ -18,7 +18,7 @@ private:
 	sf::Sprite mapImage;
 	sf::Font font;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
-	bool isWall = false;
+	bool isWall = false; // do wyjebania
 	bool foundPath = false;
 	bool startedGhost = false;
 	bool ghostFree = false;

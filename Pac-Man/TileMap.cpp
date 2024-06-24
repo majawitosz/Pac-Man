@@ -10,19 +10,25 @@ TileMap::TileMap()
 	this->layers = 1;
 
 	this->map.resize(this->maxSize.x);
+	this->dots.resize(this->maxSize.x);
 	for (size_t x = 0; x < this->maxSize.x; x++)
 	{
 		this->map.push_back(std::vector < std::vector<Tile>>());
+		this->dots.push_back(std::vector < std::vector<Dot>>());
 
 		for (size_t y = 0; y < this->maxSize.y; y++)
 		{
 			this->map[x].resize(this->maxSize.y);
 			this->map[x].push_back(std::vector<Tile>());
+			this->dots[x].resize(this->maxSize.y);
+			this->dots[x].push_back(std::vector<Dot>());
 
 			for (size_t z = 0; z < this->layers; z++)
 			{
 				this->map[x][y].resize(this->layers);
 				this->map[x][y].push_back(Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, 0, 0, x, y));
+				this->dots[x][y].resize(this->layers);
+				this->dots[x][y].push_back(Dot(x * this->gridSizeF, y * this->gridSizeF, 0, 0));
 				
 			}
 		}
@@ -80,6 +86,31 @@ void TileMap::loadMapFromFile(const std::string& filePath)
 
 }
 
+void TileMap::loadMapDotsFromFile(const std::string& filePath)
+{
+	std::ifstream file(filePath);
+	if (!file.is_open())
+	{
+		throw "ERROR::TILE_MAP::COULD_NOT_LOAD_MAP_TXT";
+	}
+	std::string line;
+	int y = 0;
+	while (std::getline(file, line))
+	{
+		for (int x = 0; x < line.size(); ++x)
+		{
+			bool isSmallDot = (line[x] == '3');
+			bool isBigDot = (line[x] == '4');
+			this->dots[x][y][0] = Dot(x * this->gridSizeF, y * this->gridSizeF, isSmallDot, isBigDot);
+		
+		}
+		++y;
+	}
+
+	file.close();
+
+}
+
 Tile* TileMap::getTileByCoor(std::pair<int, int> coor)
 {
 	for (auto& x : this->map)
@@ -112,6 +143,21 @@ void TileMap::render(sf::RenderTarget& target)
 		for (auto &y : x)
 		{
 			for (auto &z : y)
+			{
+				z.render(target);
+			}
+		}
+	}
+	
+}
+
+void TileMap::renderDots(sf::RenderTarget& target)
+{
+	for (auto& x : this->dots)
+	{
+		for (auto& y : x)
+		{
+			for (auto& z : y)
 			{
 				z.render(target);
 			}

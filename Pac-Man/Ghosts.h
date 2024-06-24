@@ -15,12 +15,14 @@ private:
    // direction directions;
     TileMap& map;
     sf::Vector2f targetPosition;
+    bool firstCollision;
 public:
     Ghosts(float x, float y, sf::Texture& texture, TileMap& map);
     virtual ~Ghosts();
     //Accesors
     const sf::FloatRect getBounds();
-
+    void setFirstCollision(bool first);
+    const bool getFirstCollision() const;
     //Functions
     bool findPath( TileMap& map, sf::FloatRect playerPosition);
     void convertSteps();

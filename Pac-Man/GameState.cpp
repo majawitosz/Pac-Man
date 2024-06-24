@@ -85,6 +85,7 @@ void GameState::initFonts()
 void GameState::initMap()
 {
 	map.loadMapFromFile("Resources/Map/map.txt");
+	map.loadMapDotsFromFile("Resources/Map/dots.txt");
 }
 
 GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
@@ -116,9 +117,27 @@ bool GameState::checkMapPlayerIntersect()
 				if (z.getIsWall() && z.getGlobalBounds().intersects(playerBounds))
 				{
 					sf::FloatRect wallBounds = z.getGlobalBounds();
+					sf::FloatRect nextPosition;
 					this->collisionManagement(playerBounds, wallBounds);
+					
+
+				/*	if (this->player->getMovementComponent()->getDirection() == MOVING_LEFT) {
+						nextPosition.left = (wallBounds.left + wallBounds.width) - playerBounds.left;
+						nextPosition.top = playerBounds.top;
+
+						this->player->getMovementComponent()->stopVelocity();
+						this->player->setPosition(nextPosition.left, nextPosition.top);
+						isWall = true;
+					}
+					if (this->player->getMovementComponent()->getDirection() == MOVING_RIGHT) {
+						nextPosition.left = wallBounds.left  - playerBounds.left;
+						nextPosition.top = playerBounds.top;
+
+						this->player->getMovementComponent()->stopVelocity();
+						this->player->setPosition(nextPosition.left, nextPosition.top);
+						isWall = true;
+					}*/
 					return true;
-				
 				}
 			}
 		}
@@ -314,7 +333,7 @@ bool GameState::checkMapGhostIntersect(Ghosts* ghost)
 			{
 				if (z.getIsWall() && z.getGlobalBounds().intersects(ghostBounds))
 				{
-					//std::cout << "sciana";
+					ghost->setFirstCollision(true);
 					sf::FloatRect wallBounds = z.getGlobalBounds();
 					this->ghostCollisionManagement(ghostBounds, wallBounds, ghost);
 					return true;
@@ -328,7 +347,9 @@ bool GameState::checkMapGhostIntersect(Ghosts* ghost)
 
 void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds, Ghosts* ghost)
 {
-	
+
+
+
 	if (ghostBounds.left < wallBounds.left + wallBounds.width && ghost->getMovementComponent()->getDirection() == MOVING_LEFT)
 	{
 		int left = static_cast<int>(std::ceil(ghost->getPosition().left));
@@ -363,19 +384,25 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 	// Up
 	if (ghostBounds.top > wallBounds.top - wallBounds.height && ghost->getMovementComponent()->getDirection() == MOVING_UP)
 	{
-		int up = static_cast<int>(std::ceil(ghost->getPosition().top));
-		up = roundToNearestMultipleOf16(up) + 3;
-		float up1 = static_cast<float>(up);
-
-		ghost->getMovementComponent()->stopVelocity();
-		ghost->setPosition(ghost->getPosition().left, up1);
-		isWall = true;
-		//std::cout << "Up: " << up1 << std::endl;
-		if (!this->ghostFree) {
+		if (ghost->getFirstCollision()) {
 			ghost->setGhostDirection(0, 1, 3);
+			ghost->setFirstCollision(false);
 		}
-		this->ghostFree = true;
-		ghost->setGhostDirection(0, 3, 2);
+		else {
+			int up = static_cast<int>(std::ceil(ghost->getPosition().top));
+			up = roundToNearestMultipleOf16(up) + 3;
+			float up1 = static_cast<float>(up);
+
+			ghost->getMovementComponent()->stopVelocity();
+			ghost->setPosition(ghost->getPosition().left, up1);
+			isWall = true;
+			//std::cout << "Up: " << up1 << std::endl;
+			if (!this->ghostFree) {
+				ghost->setGhostDirection(0, 1, 3);
+			}
+			this->ghostFree = true;
+			ghost->setGhostDirection(0, 3, 2);
+		}
 	}
 	// Down
 	if (ghostBounds.top + ghostBounds.height > wallBounds.top && ghost->getMovementComponent()->getDirection() == MOVING_DOWN)
@@ -587,7 +614,8 @@ void GameState::updateInput(const float& dt)
 
 void GameState::movementManager(const float& dt)
 {
-	if (!this->checkMapPlayerIntersect() && !isWall ) {
+
+	if (!this->checkMapPlayerIntersect()) {
 		switch (this->player->getMovementComponent()->getDirection())
 		{
 		case 1:
@@ -652,6 +680,8 @@ void GameState::render(sf::RenderTarget* target)
 	this->map.render(*target);
 	
 	target->draw(this->mapImage);
+
+	this->map.renderDots(*target);
 
 	this->player->render(*target);
 	if (!catchedPacMan) {

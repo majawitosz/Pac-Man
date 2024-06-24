@@ -3,6 +3,7 @@
 
 void Ghosts::initVariables()
 {
+	this->firstCollision = true;
 }
 
 Ghosts::Ghosts(float x, float y, sf::Texture& texture, TileMap& map) : map(map)
@@ -35,6 +36,16 @@ Ghosts::~Ghosts()
 const sf::FloatRect Ghosts::getBounds() 
 {
 	return this->sprite.getGlobalBounds();
+}
+
+void Ghosts::setFirstCollision(bool first)
+{
+	this->firstCollision = first;
+}
+
+const bool Ghosts::getFirstCollision() const
+{
+	return this->firstCollision;
 }
 
 
