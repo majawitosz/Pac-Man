@@ -18,10 +18,11 @@ private:
 	sf::Sprite mapImage;
 	sf::Font font;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
-	bool isWall = false;
+	bool isWall = false; // do wyjebania
 	bool foundPath = false;
 	bool startedGhost = false;
 	bool ghostFree = false;
+	bool catchedPacMan = false;
 
 	
 	//Initializer functions
@@ -51,7 +52,8 @@ public:
 	bool checkMapGhostIntersect(Ghosts *ghost);
 	void ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds, Ghosts* ghost);
 	void moveGhost(Ghosts* ghost, const float& dt);
-
+	bool checkPacManGhostCollision(Ghosts* ghost);
+	void stopGame();
 
 	bool checkMoveLeft(Entity *entity);
 	bool checkMoveRight(Entity* entity);

@@ -78,6 +78,9 @@
     <ClCompile Include="Ghosts.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Dot.cpp">
+      <Filter>Tile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h">
@@ -124,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="Ghosts.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Dot.h">
+      <Filter>Tile</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
