@@ -2,6 +2,7 @@
 #include "State.h"
 #include "TileMap.h"
 #include "Ghosts.h"
+#include "Dot.h"
 
 
 
@@ -23,6 +24,7 @@ private:
 	bool startedGhost = false;
 	bool ghostFree = false;
 	bool catchedPacMan = false;
+	int score;
 
 	
 	//Initializer functions
@@ -44,11 +46,12 @@ public:
 	void collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wallBounds);
 	bool teleportLeft();
 	bool teleportRight();
+	void eatDots();
+
 	void moveRedGhost(const float& dt);
 	void updateRedGhost();
 
 	void startGhosts();
-
 	bool checkMapGhostIntersect(Ghosts *ghost);
 	void ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds, Ghosts* ghost);
 	void moveGhost(Ghosts* ghost, const float& dt);

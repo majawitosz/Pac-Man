@@ -267,6 +267,26 @@ bool GameState::teleportRight()
 	return false;
 }
 
+void GameState::eatDots()
+{
+	sf::FloatRect playerBounds = this->player->getPosition();
+	for (auto& x : this->map.getDots()) {
+		for (auto& y : x) {
+			for (auto& z : y) {
+				if (!z.getIsEaten() && z.getGlobalBounds().intersects(playerBounds) && !z.getBigDot()) {
+					z.setEaten(true);
+					this->score += 10;
+				}
+				else if (z.getBigDot() && z.getGlobalBounds().intersects(playerBounds)) {
+					z.setBigDot(false);
+					z.setEaten(true);
+					this->score += 50;
+				}
+			}
+		}
+	}
+}
+
 void GameState::moveRedGhost(const float& dt)
 {
 
@@ -347,9 +367,6 @@ bool GameState::checkMapGhostIntersect(Ghosts* ghost)
 
 void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds, Ghosts* ghost)
 {
-
-
-
 	if (ghostBounds.left < wallBounds.left + wallBounds.width && ghost->getMovementComponent()->getDirection() == MOVING_LEFT)
 	{
 		int left = static_cast<int>(std::ceil(ghost->getPosition().left));
@@ -652,7 +669,8 @@ void GameState::update(const float& dt)
 	this->updateMousePosition();
 	this->movementManager(dt);
 	this->updateInput(dt);
-	
+	this->eatDots();
+	std::cout << this->score << std::endl;
 	//this->moveRedGhost(dt);
 	//this->updateRedGhost();
 	// 
@@ -679,7 +697,7 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->map.render(*target);
 	
-	target->draw(this->mapImage);
+	//target->draw(this->mapImage);
 
 	this->map.renderDots(*target);
 

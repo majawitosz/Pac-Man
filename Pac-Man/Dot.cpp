@@ -6,6 +6,7 @@ void Dot::initVariables()
 {
 	this->isSmallDot = false;
 	this->isBigDot = false;
+	this->isEaten = false;
 }
 
 Dot::Dot() {
@@ -14,7 +15,7 @@ Dot::Dot() {
 
 Dot::Dot(float x, float y, bool is_small_dot, bool is_big_dot) : isSmallDot(is_small_dot), isBigDot(is_big_dot)
 {
-
+	this->isEaten = false;
 	this->dot.setRadius(2.f);
 	//this->dot.setFillColor(sf::Color::White);
 	
@@ -37,7 +38,44 @@ Dot::~Dot()
 {
 }
 
+bool Dot::getSmallDot() const
+{
+	return this->isSmallDot;
+}
+
+bool Dot::getBigDot() const
+{
+	return this->isBigDot;
+}
+
+bool Dot::getIsEaten() const
+{
+	return this->isEaten;
+}
+
+sf::FloatRect Dot::getGlobalBounds() const
+{
+	return this->dot.getGlobalBounds();
+}
+
+void Dot::setSmallDot(bool set)
+{
+	this->isSmallDot = set;
+}
+
+void Dot::setBigDot(bool set)
+{
+	this->isBigDot = set;
+}
+
+void Dot::setEaten(bool eaten)
+{
+	this->isEaten = eaten;
+}
+
 void Dot::render(sf::RenderTarget& target)
 {
-	target.draw(this->dot);
+	if (!this->isEaten) {  
+		target.draw(this->dot);
+	}
 }

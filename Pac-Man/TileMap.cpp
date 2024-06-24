@@ -46,6 +46,11 @@ const std::vector<std::vector<std::vector<Tile>>>& TileMap::getMap() const
 	return this->map;
 }
 
+std::vector<std::vector<std::vector<Dot>>>& TileMap::getDots() 
+{
+	return this->dots;
+}
+
 const float TileMap::getWidth() const
 {
 	return this->gridSizeF * this->maxSize.x;
