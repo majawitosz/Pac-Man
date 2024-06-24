@@ -6,7 +6,7 @@ TileMap::TileMap()
 	this->gridSizeF = 16.f; //16.f
 	this->gridSizeU = static_cast<unsigned>(this->gridSizeF);
 	this->maxSize.x = 29; //224
-	this->maxSize.y = 32; //248
+	this->maxSize.y = 37; //248
 	this->layers = 1;
 
 	this->map.resize(this->maxSize.x);
@@ -65,6 +65,8 @@ const float TileMap::getGridSizeF() const
 {
 	return this->gridSizeF;
 }
+
+
 
 void TileMap::loadMapFromFile(const std::string& filePath)
 {

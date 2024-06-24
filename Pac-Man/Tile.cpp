@@ -10,18 +10,18 @@ Tile::Tile(float x, float y, float gridSizeF, bool isWall, bool isTunnel, int ro
 	
 	this->shape.setSize(sf::Vector2f(gridSizeF, gridSizeF));
 
-	if (this->isWall)
-		this->shape.setFillColor(sf::Color::Blue);
-	else if (this->isTunnel)
-		this->shape.setFillColor(sf::Color::Cyan);
-	else
+	//if (this->isWall)
+	//	this->shape.setFillColor(sf::Color::Blue);
+	//else if (this->isTunnel)
+	//	this->shape.setFillColor(sf::Color::Cyan);
+	//else
 		this->shape.setFillColor(sf::Color::Transparent);
 
 	
 
 	//this->shape.setFillColor(sf::Color::Blue);
-	this->shape.setOutlineThickness(1.f);
-	this->shape.setOutlineColor(sf::Color::Cyan);
+	//this->shape.setOutlineThickness(1.f);
+	//this->shape.setOutlineColor(sf::Color::Cyan);
 	this->shape.setPosition(x, y);
 	
 	

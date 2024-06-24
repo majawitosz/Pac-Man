@@ -58,24 +58,25 @@ void GameState::initTextures()
 
 void GameState::initPlayers()
 {
-	this->player = new Player(225, 370, this->textures["PLAYER_SHEET"], this->textures["PM_END"]);
-	this->blueGhost = new Ghosts(220, 220, this->textures["BLUE_GHOST"], this->map);
-	this->redGhost = new Ghosts(220, 220, this->textures["RED_GHOST"], this->map);
-	this->pinkGhost = new Ghosts(220, 220, this->textures["PINK_GHOST"], this->map);
-	this->yellowGhost = new Ghosts(220, 220, this->textures["YELLOW_GHOST"], this->map);
+	this->player = new Player(220, 420, this->textures["PLAYER_SHEET"], this->textures["PM_END"]);
+	this->blueGhost = new Ghosts(225, 270, this->textures["BLUE_GHOST"], this->map);
+	this->redGhost = new Ghosts(225, 270, this->textures["RED_GHOST"], this->map);
+	this->pinkGhost = new Ghosts(225, 270, this->textures["PINK_GHOST"], this->map);
+	this->yellowGhost = new Ghosts(225, 270, this->textures["YELLOW_GHOST"], this->map);
 	
 }
 
 void GameState::initMapBackground()
 {
-	this->mapImage.setTexture(this->textures["MAP"]);
 
+	this->mapImage.setTexture(this->textures["MAP"]);
+	this->mapImage.setPosition(0.f, 48.f);
 		
 }
 
 void GameState::initFonts()
 {
-	if (!this->font.loadFromFile("Fonts/Minecraft.ttf")) {
+	if (!this->font.loadFromFile("Fonts/Emulogic-zrEw.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_FONT");
 
 	}
@@ -697,7 +698,7 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->map.render(*target);
 	
-	//target->draw(this->mapImage);
+	target->draw(this->mapImage);
 
 	this->map.renderDots(*target);
 
