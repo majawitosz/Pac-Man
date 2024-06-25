@@ -7,6 +7,7 @@ void Game::initVariables()
 	this->window = nullptr;
 	this->fullscreen = false;
 	this->dt = 0.f;
+	
 }
 
 void Game::initWindow()
@@ -79,6 +80,8 @@ Game::Game()
 	this->initWindow();
 	this->initKeys();
 	this->initStates();
+	this->gameRunning = true;
+	this->gameThread = std::thread(&Game::run, this);
 }
 
 Game::~Game()
@@ -89,6 +92,11 @@ Game::~Game()
 		delete this->states.top();
 		this->states.pop();
 	}
+}
+
+void Game::setGameThread(bool run)
+{
+	this->gameRunning = run;
 }
 
 
@@ -120,6 +128,7 @@ void Game::update()
 
 		if (this->states.top()->getQuit())
 		{
+
 			this->states.top()->endState();
 			delete this->states.top();
 			this->states.pop();
@@ -149,12 +158,17 @@ void Game::render()
 
 void Game::run()
 {
-	while (this->window->isOpen())
-	{
-		this->update();
-		this->updateDt();
-		this->render();
+	
+
+	if (this->gameRunning) {
+		while (this->window->isOpen())
+		{
+			this->update();
+			this->updateDt();
+			this->render();
+		}
 	}
+	
 }
 
 void Game::endGame()

@@ -9,6 +9,9 @@
 class GameState : public State
 {
 private:
+
+	bool caughtPacMan;
+
 	Player* player;
 	TileMap map;
 	Ghosts* blueGhost;
@@ -17,14 +20,22 @@ private:
 	Ghosts* yellowGhost;
 	
 	sf::Sprite mapImage;
+	sf::Texture pacManTexture; 
+	
 	sf::Font font;
+	sf::Text scoreTextPoints;
+	sf::Text scoreText;
+	sf::Text highScore;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
 	bool isWall = false; // do wyjebania
 	bool foundPath = false;
 	bool startedGhost = false;
 	bool ghostFree = false;
-	bool catchedPacMan = false;
+
+	bool test = false;
 	int score;
+	int lives = 3;
+
 
 	
 	//Initializer functions
@@ -32,6 +43,7 @@ private:
 	void initTextures();
 	void initPlayers();
 	void initMapBackground();
+	void initPacManLives();
 	void initMap();
 	void initFonts();
 
@@ -64,9 +76,12 @@ public:
 	bool checkMoveDown(Entity* entity);
 	bool checkIfGhostMoves(Ghosts* ghost);
 
+	void display();
 	
 	void updateInput(const float& dt) override;
 	void movementManager(const float& dt);
+
+	void lightresetGame();
 	void update(const float& dt) override;
 	void render(sf::RenderTarget* target = nullptr) override;
 	

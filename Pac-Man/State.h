@@ -11,6 +11,7 @@ protected:
 	std::map<std::string, int> keybinds;
 	std::stack<State*>* states;
 	bool quit;
+	bool endThread;
 
 	sf::Vector2i mousePosScreen;
 	sf::Vector2i mousePosWindow;
