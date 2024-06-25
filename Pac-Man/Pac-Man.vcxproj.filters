@@ -81,6 +81,15 @@
     <ClCompile Include="Dot.cpp">
       <Filter>Tile</Filter>
     </ClCompile>
+    <ClCompile Include="AccountState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="TextInput.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h">
@@ -130,6 +139,15 @@
     </ClInclude>
     <ClInclude Include="Dot.h">
       <Filter>Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="AccountState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="TextInput.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

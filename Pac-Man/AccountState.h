@@ -1,25 +1,25 @@
 #pragma once
 
-#include "GameState.h"
+#include "State.h"
 #include "Button.h"
-#include "AccountState.h"
+#include "RegisterState.h"
 
-class MainMenuState : public State
+class AccountState : public State
 {
 private:
 	sf::Texture bgTexture;
 	sf::RectangleShape background;
 	sf::Font font;
 	std::map<std::string, Button*> buttons;
-	
+
 	//Functions
 	void initVariables();
 	void initFonts();
 	void initKeybinds();
 	void initButtons();
 public:
-	MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
-	virtual ~MainMenuState();
+	AccountState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	virtual ~AccountState();
 
 	//Functions
 	void initBackground();

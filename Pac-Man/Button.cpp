@@ -81,3 +81,4 @@ void Button::render(sf::RenderTarget& target)
 	target.draw(this->button);
 	target.draw(this->text);
 }
+

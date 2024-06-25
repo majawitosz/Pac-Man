@@ -40,7 +40,7 @@ public:
 	virtual ~Game();
 
 	//Mofifiers
-	void setGameThread(bool run);
+
 
 	//Fucntions
 	void updateDt();

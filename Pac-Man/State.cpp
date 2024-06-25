@@ -28,6 +28,10 @@ void State::updateMousePosition()
 	this->mousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
 }
 
+void State::handleEvent(sf::Event event)
+{
+}
+
 
 
 

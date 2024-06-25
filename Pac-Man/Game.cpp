@@ -101,8 +101,12 @@ void Game::updateSFMLEvents()
 {
 	while (this->window->pollEvent(this->event))
 	{
+		if (!this->states.empty()) {
+			this->states.top()->handleEvent(this->event);
+		}
 		if (this->event.type == sf::Event::Closed)
 			this->window->close();
+		
 	}
 }
 
@@ -121,13 +125,14 @@ void Game::update()
 	if (!this->states.empty())
 	{
 		this->states.top()->update(this->dt);
-
+		
 		if (this->states.top()->getQuit())
 		{
-
+		
 			this->states.top()->endState();
 			delete this->states.top();
 			this->states.pop();
+			
 		}
 
 	}
