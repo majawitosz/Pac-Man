@@ -14,6 +14,7 @@ private:
 	std::vector<sf::VideoMode> videoModes;
 	sf::ContextSettings windowSettings;
 	bool fullscreen;
+	std::map<std::string, int> supportedKeys;
 
 	//Time
 	sf::Clock dtClock;
@@ -22,7 +23,7 @@ private:
 	//States
 	std::stack<State*> states;
 
-	std::map<std::string, int> supportedKeys;
+
 
 	//Initialization
 	void initVariables();
@@ -31,10 +32,15 @@ private:
 	void initStates();
 
 
+
+
 public:
 	//Constructor and deconstructor
 	Game();
 	virtual ~Game();
+
+	//Mofifiers
+	void setGameThread(bool run);
 
 	//Fucntions
 	void updateDt();
@@ -42,6 +48,7 @@ public:
 	void update();
 	void render();
 	void run();
+	
 	void endGame();
 };
 

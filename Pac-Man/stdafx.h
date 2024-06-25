@@ -17,6 +17,12 @@
 #include <set>
 #include <iomanip>
 #include <random>
+#include <thread>
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
+#include <cassert>
+#include <chrono>
 
 #include <SFML/Graphics.hpp>
 

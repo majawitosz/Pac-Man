@@ -85,7 +85,7 @@ movementStates MovementComponent::getDirection()
 
 
 
-
+//do usuniecia?
 std::string MovementComponent::getLastDirection() const
 {
 

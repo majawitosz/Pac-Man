@@ -13,15 +13,18 @@ private:
 	unsigned layers;
 	std::vector<std::vector<std::vector<Tile>>> map;
 	std::vector<std::vector<std::vector<Dot>>> dots;
+
 public:
 	TileMap();
 	virtual ~TileMap();
 
 	// Accessor function
 	const std::vector<std::vector<std::vector<Tile>>>& getMap() const;
+	 std::vector<std::vector<std::vector<Dot>>>& getDots() ;
 	const float getWidth() const;
 	const float getHeight() const;
 	const float getGridSizeF() const;
+	
 	
 
 	//Functions

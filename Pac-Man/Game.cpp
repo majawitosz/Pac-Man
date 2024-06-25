@@ -7,6 +7,7 @@ void Game::initVariables()
 	this->window = nullptr;
 	this->fullscreen = false;
 	this->dt = 0.f;
+	
 }
 
 void Game::initWindow()
@@ -18,6 +19,7 @@ void Game::initWindow()
 
 	std::string title = "None";
 	sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
+
 
 	bool fullscreen = false;
 	unsigned framerate_limit = 120;
@@ -78,6 +80,7 @@ Game::Game()
 	this->initWindow();
 	this->initKeys();
 	this->initStates();
+
 }
 
 Game::~Game()
@@ -89,6 +92,8 @@ Game::~Game()
 		this->states.pop();
 	}
 }
+
+
 
 
 //Functions
@@ -119,6 +124,7 @@ void Game::update()
 
 		if (this->states.top()->getQuit())
 		{
+
 			this->states.top()->endState();
 			delete this->states.top();
 			this->states.pop();
@@ -148,12 +154,15 @@ void Game::render()
 
 void Game::run()
 {
-	while (this->window->isOpen())
-	{
-		this->update();
-		this->updateDt();
-		this->render();
-	}
+	
+		while (this->window->isOpen())
+		{
+			this->update();
+			this->updateDt();
+			this->render();
+		}
+	
+	
 }
 
 void Game::endGame()
