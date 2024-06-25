@@ -21,7 +21,7 @@ private:
 	
 	sf::Sprite mapImage;
 	sf::Texture pacManTexture; 
-	
+	std::vector<sf::Sprite> pacManLivesSprites;
 	sf::Font font;
 	sf::Text scoreTextPoints;
 	sf::Text scoreText;

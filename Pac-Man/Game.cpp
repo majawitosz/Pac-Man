@@ -80,8 +80,7 @@ Game::Game()
 	this->initWindow();
 	this->initKeys();
 	this->initStates();
-	this->gameRunning = true;
-	this->gameThread = std::thread(&Game::run, this);
+
 }
 
 Game::~Game()
@@ -94,10 +93,7 @@ Game::~Game()
 	}
 }
 
-void Game::setGameThread(bool run)
-{
-	this->gameRunning = run;
-}
+
 
 
 //Functions
@@ -159,15 +155,13 @@ void Game::render()
 void Game::run()
 {
 	
-
-	if (this->gameRunning) {
 		while (this->window->isOpen())
 		{
 			this->update();
 			this->updateDt();
 			this->render();
 		}
-	}
+	
 	
 }
 

@@ -23,8 +23,7 @@ private:
 	//States
 	std::stack<State*> states;
 
-	std::atomic<bool> gameRunning;
-	std::thread gameThread;
+
 
 	//Initialization
 	void initVariables();
