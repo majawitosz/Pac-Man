@@ -531,7 +531,6 @@ void GameState::stopGame()
 		
 		this->player->getMovementComponent()->setDirection(IDLE);
 		this->player->setEndGame(true);
-		
 	}
 }
 
