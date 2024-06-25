@@ -1,6 +1,6 @@
 #pragma once
 
-#define DELETE_KEY 8
+
 
 enum textInputStates {
     TI_IDLE = 0,
@@ -31,7 +31,7 @@ public:
     virtual ~TextInput();
     const bool getIsActive() const;
  
-    void inputLogic();
+   
     void handleEvent(sf::Event event);
     void update(const sf::Vector2f mousePos);
     void render(sf::RenderTarget& target);

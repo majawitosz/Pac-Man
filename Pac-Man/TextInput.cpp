@@ -112,4 +112,5 @@ void TextInput::render(sf::RenderTarget& target) {
     else {
         target.draw(text);
     }
+    
 }
