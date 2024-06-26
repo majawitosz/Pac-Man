@@ -663,25 +663,24 @@ void GameState::movementManager(const float& dt)
 
 void GameState::update(const float& dt)
 {
-	
+
 		this->updateMousePosition();
 		this->movementManager(dt);
 		this->updateInput(dt);
 		this->eatDots();
+		if (!this->caughtPacMan) {
+			this->startGhosts();
+			this->moveGhost(this->blueGhost, dt);
+			this->moveGhost(this->redGhost, dt);
+			this->moveGhost(this->pinkGhost, dt);
+			this->moveGhost(this->yellowGhost, dt);
+			this->player->update(dt);
+			this->blueGhost->update(dt);
+			this->redGhost->update(dt);
+			this->pinkGhost->update(dt);
+			this->yellowGhost->update(dt);
+		}
 
-		this->startGhosts();
-		this->moveGhost(this->blueGhost, dt);
-		this->moveGhost(this->redGhost, dt);
-		this->moveGhost(this->pinkGhost, dt);
-		this->moveGhost(this->yellowGhost, dt);
-		
-		this->player->update(dt);
-		this->blueGhost->update(dt);
-		this->redGhost->update(dt);
-		this->pinkGhost->update(dt);
-		this->yellowGhost->update(dt);
-
-		
 		this->display();
 	
 }
@@ -709,9 +708,9 @@ void GameState::render(sf::RenderTarget* target)
 	target->draw(this->highScore);
 	
 	
-	/*for (const auto& sprite : this->pacManLivesSprites) {
+	for (const auto& sprite : this->pacManLivesSprites) {
 		target->draw(sprite);
-	}*/
+	}
 
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
@@ -788,28 +787,27 @@ void GameState::sendRequest(const std::string& username, int score)
 
 void GameState::restartGame()
 {
-	//sf::sleep(sf::milliseconds(500));
-	if (!caughtPacMan) {
-		this->player->getMovementComponent()->stopVelocity();
-		this->blueGhost->getMovementComponent()->stopVelocity();
-		this->redGhost->getMovementComponent()->stopVelocity();
-		this->pinkGhost->getMovementComponent()->stopVelocity();
-		this->yellowGhost->getMovementComponent()->stopVelocity();
-		this->player->getMovementComponent()->setDirection(IDLE);
-		this->player->setEndGame(true);
-	}
 
-	//if (!this->pacManLivesSprites.empty())
-		//this->pacManLivesSprites.pop_back();
+	this->player->getMovementComponent()->stopVelocity();
+	this->blueGhost->getMovementComponent()->stopVelocity();
+	this->redGhost->getMovementComponent()->stopVelocity();
+	this->pinkGhost->getMovementComponent()->stopVelocity();
+	this->yellowGhost->getMovementComponent()->stopVelocity();
+	this->player->getMovementComponent()->setDirection(IDLE);
+	sf::sleep(sf::milliseconds(500));
+	
+	
+	if (!this->pacManLivesSprites.empty())
+		this->pacManLivesSprites.pop_back();
 
 	if (this->lives > 0) {
 		this->lives -= 1;
-		this->caughtPacMan = false;
 		this->player->setPosition(220, 420);
 		this->blueGhost->setPosition(225, 270);
 		this->redGhost->setPosition(225, 270);
 		this->pinkGhost->setPosition(225, 270);
-		this->yellowGhost->setPosition(225, 270); 
+		this->yellowGhost->setPosition(225, 270);
+		this->caughtPacMan = false;
 	}
 	else if (this->lives == 0) {
 		this->endState();
