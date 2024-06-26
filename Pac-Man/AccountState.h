@@ -13,6 +13,9 @@ private:
 	sf::Font font;
 	std::map<std::string, Button*> buttons;
 
+	bool loggedIn = false;
+	std::string username;
+
 	//Functions
 	void initVariables();
 	void initFonts();
@@ -21,6 +24,10 @@ private:
 public:
 	AccountState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
 	virtual ~AccountState();
+
+	//Modifiers
+	void setLogInStatus();
+	
 
 	//Functions
 	void initBackground();

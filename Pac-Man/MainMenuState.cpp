@@ -152,14 +152,14 @@ void MainMenuState::render(sf::RenderTarget* target)
 	this->renderButtons(*target);
 	
 
-	if (getLoginStatus()) {
+	/*if (getLoginStatus()) {
 		this->loginStatus.setPosition(300.f, 150.f);
 		this->loginStatus.setFont(this->font);
 		this->loginStatus.setCharacterSize(12);
 		std::string ss = "User: " + getUsername();
 		this->loginStatus.setString(ss);
 		target->draw(this->loginStatus);
-	}
+	}*/
 
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);

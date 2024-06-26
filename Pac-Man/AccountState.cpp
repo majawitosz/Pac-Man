@@ -68,6 +68,11 @@ AccountState::~AccountState()
 
 }
 
+void AccountState::setLogInStatus()
+{
+	this->loggedIn = true;
+}
+
 
 
 void AccountState::initBackground()
@@ -106,7 +111,7 @@ void AccountState::updateButtons()
 	}
 	else if (this->buttons["LOGIN_STATE"]->isPressed()) {
 		sf::sleep(sf::milliseconds(100));
-		LoginState* loginState = new LoginState(this->window, this->supportedKeys, this->states);
+		LoginState* loginState = new LoginState(this->window, this->supportedKeys, this->states, this);
 		this->states->push(loginState);
 		//this->states->push(new LoginState(this->window, this->supportedKeys, this->states));
 
@@ -137,6 +142,10 @@ void AccountState::renderButtons(sf::RenderTarget& target)
 
 void AccountState::render(sf::RenderTarget* target)
 {
+
+	if (this->loggedIn) {
+		std::cout << "kurwa w koncu" << std::endl;
+	}
 	if (!target)
 		target = this->window;
 

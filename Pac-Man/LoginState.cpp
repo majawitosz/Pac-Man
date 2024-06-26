@@ -58,9 +58,10 @@ void LoginState::initTextInput()
 
 }
 
-LoginState::LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	: State(window, supportedKeys, states)
+LoginState::LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, AccountState* accountState)
+	: State(window, supportedKeys, states), accountState(accountState)
 {
+	//this->accountState = nullptr;
 	this->initVariables();
 	this->initBackground();
 	this->initFonts();
@@ -217,8 +218,9 @@ void LoginState::handleResponse(const std::string& response, long httpCode, std:
 	case 201: // Login successful
 		this->serverInformation = "Login successful";
 		std::cout << "Login successful\n";
-		this->userName = username;
-		this->logedIn = true;
+		//this->userName = username;
+		//this->logedIn = true;
+		this->accountState->setLogInStatus();
 		//setUsername(username);
 		//setLoginStatus(true);
 		//sf::sleep(sf::milliseconds(1500));

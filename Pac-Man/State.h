@@ -11,8 +11,8 @@ protected:
 	std::map<std::string, int> keybinds;
 	std::stack<State*>* states;
 	bool quit;
-	bool logedIn;
-	std::string userName;
+	//bool logedIn;
+	//std::string userName;
 
 	sf::Vector2i mousePosScreen;
 	sf::Vector2i mousePosWindow;
@@ -30,10 +30,10 @@ public:
 
 	const bool& getQuit() const;
 	virtual void endState();
-	virtual bool& getLoginStatus();
-	virtual void setLoginStatus(bool login);
-	virtual void setUsername(std::string username);
-	virtual std::string getUsername();
+	//virtual bool& getLoginStatus();
+	//virtual void setLoginStatus(bool login);
+	//virtual void setUsername(std::string username);
+	//virtual std::string getUsername();
 	//	virtual void endStateUpdate() = 0;
 
 	virtual void updateMousePosition();

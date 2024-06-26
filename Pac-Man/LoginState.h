@@ -3,10 +3,14 @@
 #include "State.h"
 #include "Button.h"
 #include "TextInput.h"
+#include "AccountState.h"
+
+class AccountState;
 
 class LoginState : public State
 {
 private:
+	AccountState* accountState;
 	sf::Event event;
 	sf::Texture bgTexture;
 	sf::RectangleShape background;
@@ -28,7 +32,7 @@ private:
 	void initButtons();
 	void initTextInput();
 public:
-	LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, AccountState* accountState);
 	virtual ~LoginState();
 
 	//Functions
