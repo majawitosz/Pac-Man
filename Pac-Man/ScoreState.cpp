@@ -217,16 +217,6 @@ void ScoreState::render(sf::RenderTarget* target)
 	this->serverInfo.setString(this->serverInformation);
 	this->serverInfo.setFillColor(sf::Color(150, 150, 150, 255));
 	target->draw(this->serverInfo);
-
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(12);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
-
-	target->draw(mouseText);
 }
 
 

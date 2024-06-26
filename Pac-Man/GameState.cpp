@@ -194,7 +194,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(left1, this->player->getPosition().top);
 		//std::cout << "Left: " << left1 << std::endl;
-		isWall = true;
+		//isWall = true;
 		//if (this->ghost->findPath(map, this->player->getPosition()))
 		//	this->foundPath = true;
 		
@@ -209,7 +209,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(right1, this->player->getPosition().top);
 		//std::cout << "Right: " << right1 << std::endl;
-		isWall = true;
+		//isWall = true;
 	}
 
 	// Up
@@ -221,7 +221,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 		
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(this->player->getPosition().left, up1);
-		isWall = true;
+		//isWall = true;
 		//std::cout << "Up: " << up1 << std::endl;
 	}
 	// Down
@@ -233,10 +233,10 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 		
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(this->player->getPosition().left, down1);
-		isWall = true;
+		//isWall = true;
 		//std::cout << "Down: " << down1 << std::endl;
 	}
-	isWall = false;
+	//isWall = false;
 }
 
 bool GameState::teleportLeft()
@@ -351,17 +351,9 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 	{
 		int left = static_cast<int>(std::ceil(ghost->getPosition().left));
 		left = roundToNearestMultipleOf16(left) + 3;
-
 		float left1 = static_cast<float>(left);
-
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(left1, ghost->getPosition().top);
-		//std::cout << "Left: " << left1 << std::endl;
-		isWall = true;
-		//if (this->ghost->findPath(map, this->player->getPosition()))
-		//	this->foundPath = true;
-
-
 		ghost->setGhostDirection(0, 3,0);
 	}
 	// Right
@@ -370,14 +362,10 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 		int right = static_cast<int>(std::floor(ghost->getPosition().left));
 		right = roundToNearestMultipleOf16(right) + 3;
 		float right1 = static_cast<float>(right);
-
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(right1, ghost->getPosition().top);
-		//std::cout << "Right: " << right1 << std::endl;
-		isWall = true;
 		ghost->setGhostDirection(0, 3, 1);
 	}
-
 	// Up
 	if (ghostBounds.top > wallBounds.top - wallBounds.height && ghost->getMovementComponent()->getDirection() == MOVING_UP)
 	{
@@ -389,15 +377,12 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 			int up = static_cast<int>(std::ceil(ghost->getPosition().top));
 			up = roundToNearestMultipleOf16(up) + 3;
 			float up1 = static_cast<float>(up);
-
 			ghost->getMovementComponent()->stopVelocity();
 			ghost->setPosition(ghost->getPosition().left, up1);
-			isWall = true;
-			//std::cout << "Up: " << up1 << std::endl;
-			if (!this->ghostFree) {
+			/*if (!this->ghostFree) {
 				ghost->setGhostDirection(0, 1, 3);
 			}
-			this->ghostFree = true;
+			this->ghostFree = true;*/
 			ghost->setGhostDirection(0, 3, 2);
 		}
 	}
@@ -407,15 +392,10 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 		int down = static_cast<int>(std::floor(ghost->getPosition().top));
 		down = roundToNearestMultipleOf16(down) + 3;
 		float down1 = static_cast<float>(down);
-
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(ghost->getPosition().left, down1);
-		isWall = true;
-		//std::cout << "Down: " << down1 << std::endl;
 		ghost->setGhostDirection(0, 3 ,3);
 	}
-	isWall = false;
-	
 }
 
 void GameState::moveGhost(Ghosts* ghost, const float& dt)
@@ -424,14 +404,13 @@ void GameState::moveGhost(Ghosts* ghost, const float& dt)
 	if (this->checkPacManGhostCollision(ghost)) {
 		
 		this->restartGame();
-		//sf::sleep(sf::milliseconds(1000));
 		
 	}
 	if (!checkIfGhostMoves(ghost)) {
 		ghost->setGhostDirection(0, 3, 5);
 		
 	}
-	if (!this->checkMapGhostIntersect(ghost) && !isWall && !caughtPacMan) {
+	if (!this->checkMapGhostIntersect(ghost)  && !caughtPacMan) {
 		switch (ghost->getMovementComponent()->getDirection())
 		{
 		case 1:
@@ -663,7 +642,6 @@ void GameState::movementManager(const float& dt)
 
 void GameState::update(const float& dt)
 {
-
 		this->updateMousePosition();
 		this->movementManager(dt);
 		this->updateInput(dt);
@@ -680,9 +658,7 @@ void GameState::update(const float& dt)
 			this->pinkGhost->update(dt);
 			this->yellowGhost->update(dt);
 		}
-
-		this->display();
-	
+		this->display();	
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -707,21 +683,9 @@ void GameState::render(sf::RenderTarget* target)
 	target->draw(this->scoreText);
 	target->draw(this->highScore);
 	
-	
 	for (const auto& sprite : this->pacManLivesSprites) {
 		target->draw(sprite);
-	}
-
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(12);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
-
-	target->draw(mouseText);
-	
+	}	
 }
 
 static size_t my_write(void* buffer, size_t size, size_t nmemb, void* param)
@@ -811,6 +775,8 @@ void GameState::restartGame()
 	}
 	else if (this->lives == 0) {
 
+
+		this->states->push(new GameOverState(this->window, this->states));
 		this->endState();
 	}
 }

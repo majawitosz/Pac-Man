@@ -337,19 +337,5 @@ void RegisterState::render(sf::RenderTarget* target)
 	this->serverInfo.setFont(this->font2);
 	this->serverInfo.setCharacterSize(12);
 	this->serverInfo.setString(this->serverInformation);
-	target->draw(this->serverInfo);
-
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(12);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
-
-	target->draw(mouseText);
-	
-
-
-	
+	target->draw(this->serverInfo);	
 }

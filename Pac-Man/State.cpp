@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "State.h"
 
+void State::initKeybinds()
+{
+}
+
 State::State(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
 	: window(window), quit(false), supportedKeys(supportedKeys), states(states)
 {
@@ -53,6 +57,10 @@ void State::handleEvent(sf::Event event)
 }
 
 void State::updateInput(const float& dt)
+{
+}
+
+void State::update(const float& dt)
 {
 }
 

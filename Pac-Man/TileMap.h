@@ -25,7 +25,6 @@ public:
 	const float getHeight() const;
 	const float getGridSizeF() const;
 	
-	
 
 	//Functions
 	void loadMapFromFile(const std::string& filePath);

@@ -139,22 +139,10 @@ void AccountState::renderButtons(sf::RenderTarget& target)
 
 void AccountState::render(sf::RenderTarget* target)
 {
-
-	
 	if (!target)
 		target = this->window;
 
 	target->draw(this->background);
 
 	this->renderButtons(*target);
-
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(12);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
-
-	target->draw(mouseText);
 }

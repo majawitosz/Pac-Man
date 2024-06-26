@@ -159,39 +159,20 @@ void LoginState::sendRequest()
 		std::string password = this->textInputs["PASSWORD"]->getUserInput();
 		std::string postFields = "username=" + username + "&password=" + password;
 
-		// Set the URL
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
-		// Set POST request
 		curl_easy_setopt(curl, CURLOPT_POST, 1L);
-
-		// Set POST fields
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postFields.c_str());
-
-		// Set the write function callback
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_write);
-
-		// Set the string to store the result
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
-
-		// Optional: Set verbose mode to 1 (for debugging)
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-		// Perform the request
 		res = curl_easy_perform(curl);
-
 		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-
-		// Check for errors
 		if (res != CURLE_OK) {
 			std::cerr << "CURL error: " << curl_easy_strerror(res) << std::endl;
 		}
 		else {
-			//std::cout << "Response: " << result << std::endl;
 			handleResponse(result, httpCode, username);
 		}
-
-		// Cleanup
 		curl_easy_cleanup(curl);
 	}
 
@@ -209,14 +190,10 @@ void LoginState::handleResponse(const std::string& response, long httpCode, std:
 		std::cerr << "JSON parse error: " << e.what() << std::endl;
 		return;
 	}
-
-	// Handle response based on HTTP status code
 	switch (httpCode) {
 	case 201: // Login successful
 		this->serverInformation = "Login successful";
 		std::cout << "Login successful\n";
-		//this->userName = username;
-		//this->logedIn = true;
 		this->mainMenuState->setLoginStatus(true);
 		this->mainMenuState->setUsername(username);
 		break;
@@ -300,19 +277,11 @@ void LoginState::render(sf::RenderTarget* target)
 			target->draw(this->info[i]);
 		}
 	}
-	this->serverInfo.setPosition(270.f, 170.f);
-	this->serverInfo.setFont(this->font2);
-	this->serverInfo.setCharacterSize(12);
+	this->serverInfo.setPosition(300.f, 170.f);
+	this->serverInfo.setFont(this->font);
+	this->serverInfo.setCharacterSize(14);
+	this->serverInfo.setFillColor(sf::Color(150, 150, 150, 255));
 	this->serverInfo.setString(this->serverInformation);
 	target->draw(this->serverInfo);
 
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(12);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
-
-	target->draw(mouseText);
 }

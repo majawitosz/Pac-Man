@@ -245,8 +245,6 @@ int rand_int(int low, int high)
 
 void Ghosts::setGhostDirection(int low, int high, int wallIntersect)
 {
-
-	
 	int direction = rand_int(low, high); // 0 - left, 1 - right, 2 - up, 3 - down
 
 
@@ -271,16 +269,6 @@ void Ghosts::setGhostDirection(int low, int high, int wallIntersect)
 	
 }
 
-
-
-
-//void Ghosts::render(sf::RenderTarget& target)
-//{
-//	target.draw(this->circle);
-//
-//	if (this->hitboxComponent)
-//		this->hitboxComponent->render(target);
-//}
 
 void Ghosts::update(const float& dt)
 {

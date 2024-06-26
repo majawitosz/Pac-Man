@@ -22,7 +22,7 @@ protected:
 	std::map<std::string, sf::Texture> textures;
 
 	//Functions
-	virtual void initKeybinds() = 0;
+	virtual void initKeybinds();
 
 public:
 	State(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
@@ -42,8 +42,7 @@ public:
 	virtual void updateInput(const float& dt);
 
 
-
-	virtual void update(const float& dt) = 0;
+	virtual void update(const float& dt);
 	virtual void render(sf::RenderTarget* target = NULL) = 0;
 
 };

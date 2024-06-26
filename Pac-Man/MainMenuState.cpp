@@ -142,21 +142,12 @@ void MainMenuState::render(sf::RenderTarget* target)
 
 	if (this->loggedIn) {
 		
-		this->loginStatus.setPosition(300.f, 180.f);
+		this->loginStatus.setPosition(310.f, 180.f);
 		this->loginStatus.setFont(this->font);
 		this->loginStatus.setCharacterSize(12);
+		this->loginStatus.setFillColor(sf::Color(150, 150, 150, 255));
 		std::string ss = "User: " + this->username;
 		this->loginStatus.setString(ss);
 		target->draw(this->loginStatus);
 	}
-
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(12);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
-
-	target->draw(mouseText);
 }

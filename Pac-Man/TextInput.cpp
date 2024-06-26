@@ -42,8 +42,7 @@ TextInput::TextInput(float x, float y, float width, float height,
     this->placeholder.setCharacterSize(16);
     this->placeholder.setFillColor(sf::Color::Black);
     this->placeholder.setPosition(x + 10.f, y + 5.f);
-    //rgb(247, 249, 242)
-    //rgb(47, 54, 69)
+  
 }
 
 TextInput::~TextInput()
@@ -88,7 +87,7 @@ void TextInput::update(const sf::Vector2f mousePos)
         {
             this->textInputState = TI_ACTIVE;
             isActive = true;
-            std::cout << "active" << this->placeholdertest << std::endl;
+            
           
         }
     }
@@ -96,7 +95,7 @@ void TextInput::update(const sf::Vector2f mousePos)
         sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         this->textInputState = TI_IDLE;
         this->isActive = false;
-        std::cout << "idle" << this->placeholdertest << std::endl;
+       
     }
 
     switch (this->textInputState)

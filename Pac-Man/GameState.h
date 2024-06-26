@@ -3,7 +3,7 @@
 #include "TileMap.h"
 #include "Ghosts.h"
 #include "Dot.h"
-
+#include "GameOverState.h"
 
 
 class GameState : public State
@@ -27,15 +27,12 @@ private:
 	sf::Text scoreText;
 	sf::Text highScore;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
-	bool isWall = false; // do usuniecia
 	bool foundPath = false;
 	bool startedGhost = false;
 	bool ghostFree = false;
 	int score;
-	int lives = 3;
+	int lives = 2;
 
-
-	
 	//Initializer functions
 	void initKeybinds();
 	void initTextures();
