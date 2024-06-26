@@ -26,9 +26,11 @@
 #include <regex>
 #include <ranges>
 #include <future>
+#include <filesystem>
 #include "json.hpp"
 
 using json = nlohmann::json;
+namespace fs = std::filesystem;
 #include <SFML/Graphics.hpp>
 
 #define CURL_STATICLIB

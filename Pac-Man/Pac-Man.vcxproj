@@ -183,6 +183,7 @@
     <ClCompile Include="Pac-Man.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RegisterState.cpp" />
+    <ClCompile Include="ScoreState.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -210,6 +211,7 @@
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RegisterState.h" />
+    <ClInclude Include="ScoreState.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextInput.h" />

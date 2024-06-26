@@ -5,8 +5,10 @@
 #include "RegisterState.h"
 #include "LoginState.h"
 #include "MainMenuState.h"
+#include "ScoreState.h"
 
 class MainMenuState;
+
 
 class AccountState : public State
 {

@@ -52,6 +52,10 @@ void State::handleEvent(sf::Event event)
 {
 }
 
+void State::updateInput(const float& dt)
+{
+}
+
 
 
 

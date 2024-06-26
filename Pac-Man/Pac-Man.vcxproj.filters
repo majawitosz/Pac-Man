@@ -93,6 +93,9 @@
     <ClCompile Include="LoginState.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="ScoreState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h">
@@ -153,6 +156,9 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="LoginState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreState.h">
       <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>

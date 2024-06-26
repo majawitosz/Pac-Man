@@ -39,7 +39,7 @@ public:
 	virtual void updateMousePosition();
 
 	virtual void handleEvent(sf::Event event);
-	virtual void updateInput(const float& dt) = 0;
+	virtual void updateInput(const float& dt);
 
 
 
