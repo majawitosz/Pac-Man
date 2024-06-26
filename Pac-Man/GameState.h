@@ -49,7 +49,7 @@ private:
 
 	
 public:
-	GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::string userName);
 	virtual ~GameState();
 
 	//Functions
@@ -84,6 +84,8 @@ public:
 	void lightresetGame();
 	void update(const float& dt) override;
 	void render(sf::RenderTarget* target = nullptr) override;
+
+	void sendRequest(const std::string& username, int score);
 	
 };
 

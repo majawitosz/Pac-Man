@@ -112,12 +112,13 @@ void MainMenuState::updateButtons()
 	//New game
 	if (this->buttons["GAME_STATE"]->isPressed())
 	{
-		this->states->push(new GameState(this->window, this->supportedKeys, this->states));
+		this->states->push(new GameState(this->window, this->supportedKeys, this->states, this->username));
+
 	}
 	else if (this->buttons["ACCOUNT_STATE"]->isPressed())
 	{
 		sf::sleep(sf::milliseconds(100));
-		this->states->push(new AccountState(this->window, this->supportedKeys, this->states));
+		this->states->push(new AccountState(this->window, this->supportedKeys, this->states, this));
 	}
 	//Quit the game
 	else if (this->buttons["EXIT_STATE"]->isPressed())
@@ -152,14 +153,15 @@ void MainMenuState::render(sf::RenderTarget* target)
 	this->renderButtons(*target);
 	
 
-	/*if (getLoginStatus()) {
-		this->loginStatus.setPosition(300.f, 150.f);
+	if (this->loggedIn) {
+		
+		this->loginStatus.setPosition(300.f, 180.f);
 		this->loginStatus.setFont(this->font);
 		this->loginStatus.setCharacterSize(12);
-		std::string ss = "User: " + getUsername();
+		std::string ss = "User: " + this->username;
 		this->loginStatus.setString(ss);
 		target->draw(this->loginStatus);
-	}*/
+	}
 
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);

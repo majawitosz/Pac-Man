@@ -21,25 +21,25 @@ void State::endState()
 	this->quit = true;
 }
 
-//bool& State::getLoginStatus() 
-//{
-//	return this->logedIn;
-//}
-//
-//void State::setLoginStatus(bool login)
-//{
-//	this->logedIn = login;
-//}
-//
-//void State::setUsername(std::string username)
-//{
-//	this->userName = username;
-//}
-//
-//std::string State::getUsername()
-//{
-//	return this->userName;
-//}
+bool& State::getLoginStatus() 
+{
+	return this->loggedIn;
+}
+
+void State::setLoginStatus(bool login)
+{
+	this->loggedIn = login;
+}
+
+void State::setUsername(std::string username)
+{
+	this->username = username;
+}
+
+std::string State::getUsername()
+{
+	return this->username;
+}
 
 void State::updateMousePosition()
 {

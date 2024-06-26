@@ -102,10 +102,10 @@ void GameState::initMap()
 	map.loadMapDotsFromFile("Resources/Map/dots.txt");
 }
 
-GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
+GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::string userName)
 	: State(window, supportedKeys, states), caughtPacMan(false)
 {
-
+	this->username = userName;
 	this->initKeybinds();
 	this->initTextures();
 	this->initPlayers();
@@ -114,7 +114,6 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initFonts();
 	this->initPacManLives();
 
-	
 }
 
 GameState::~GameState()
@@ -677,6 +676,12 @@ void GameState::updateInput(const float& dt)
 		
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE")))) {
+		if (this->username == "") {
+			this->sendRequest("anonymousUser", this->score);
+		}
+		else {
+			this->sendRequest(username, this->score);
+		}
 		this->endState();
 	}		
 }
@@ -790,5 +795,66 @@ void GameState::render(sf::RenderTarget* target)
 
 	target->draw(mouseText);
 	
+}
+
+static size_t my_write(void* buffer, size_t size, size_t nmemb, void* param)
+{
+	std::string& text = *static_cast<std::string*>(param);
+	size_t totalsize = size * nmemb;
+	text.append(static_cast<char*>(buffer), totalsize);
+	return totalsize;
+}
+
+void GameState::sendRequest(const std::string& username, int score)
+{
+	CURL* curl;
+	CURLcode res;
+	std::string result;
+	long httpCode = 0;
+
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+	curl = curl_easy_init();
+
+	if (curl) {
+		std::string url = "http://localhost:3000/addScore";
+		std::string postFields = "username=" + username + "&score=" + std::to_string(score);
+
+		// Set the URL
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+		// Set POST request
+		curl_easy_setopt(curl, CURLOPT_POST, 1L);
+
+		// Set POST fields
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postFields.c_str());
+
+		// Set the write function callback
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_write);
+
+		// Set the string to store the result
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
+
+		// Optional: Set verbose mode to 1 (for debugging)
+		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+		// Perform the request
+		res = curl_easy_perform(curl);
+
+		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+
+		// Check for errors
+		if (res != CURLE_OK) {
+			std::cerr << "CURL error: " << curl_easy_strerror(res) << std::endl;
+		}
+		else {
+			std::cout << "Response: " << result << std::endl;
+			// handleResponse(result, httpCode); // Implement this function to handle the response
+		}
+
+		// Cleanup
+		curl_easy_cleanup(curl);
+	}
+
+	curl_global_cleanup();
 }
 

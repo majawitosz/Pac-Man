@@ -6,11 +6,13 @@
 #include "AccountState.h"
 
 class AccountState;
+class MainMenuState;
 
 class LoginState : public State
 {
 private:
 	AccountState* accountState;
+	MainMenuState* mainMenuState;
 	sf::Event event;
 	sf::Texture bgTexture;
 	sf::RectangleShape background;
@@ -22,8 +24,7 @@ private:
 	sf::Text serverInfo;
 	std::string serverInformation;
 	bool displayInfo = false;
-	bool loggedIn = false;
-	std::string username;
+	
 
 	//Functions
 	void initVariables();
@@ -32,7 +33,8 @@ private:
 	void initButtons();
 	void initTextInput();
 public:
-	LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, AccountState* accountState);
+	LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys,
+		std::stack<State*>* states, AccountState* accountState, MainMenuState* mainMenuState);
 	virtual ~LoginState();
 
 	//Functions
