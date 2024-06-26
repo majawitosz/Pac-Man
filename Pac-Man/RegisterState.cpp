@@ -13,7 +13,7 @@ void RegisterState::initFonts()
 		throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_FONT");
 
 	}
-	if (!this->font2.loadFromFile("Fonts/Roboto-Light.ttf")) {
+	if (!this->font2.loadFromFile("Fonts/RobotoMono-Bold.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_FONT");
 	}
 
@@ -40,10 +40,10 @@ void RegisterState::initButtons()
 {
 	this->buttons["SUBMIT"] = new Button(320, 360, 150, 50,
 		&this->font, "SUBMIT",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	this->buttons["EXIT_STATE"] = new Button(320, 440, 150, 50,
 		&this->font, "BACK",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 
 }
 

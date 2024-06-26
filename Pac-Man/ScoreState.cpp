@@ -12,7 +12,7 @@ void ScoreState::initFonts()
 		throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_FONT");
 
 	}
-	if (!this->font2.loadFromFile("Fonts/Roboto-Light.ttf")) {
+	if (!this->font2.loadFromFile("Fonts/RobotoMono-Bold.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_FONT");
 	}
 
@@ -39,11 +39,10 @@ void ScoreState::initButtons()
 {
 	this->buttons["SAVE_SCORES"] = new Button(320, 360, 150, 50,
 		&this->font, "SAVE SCORES",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	this->buttons["EXIT_STATE"] = new Button(320, 440, 150, 50,
 		&this->font, "BACK",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 }
 
 
@@ -57,7 +56,7 @@ ScoreState::ScoreState(sf::RenderWindow* window, std::map<std::string, int>* sup
 	this->initFonts();
 	this->initKeybinds();
 	this->initButtons();
-	std::thread(&ScoreState::sendRequest, this).detach();
+	//std::thread(&ScoreState::sendRequest, this).detach();
 }
 
 ScoreState::~ScoreState()
@@ -93,8 +92,8 @@ void ScoreState::updateButtons()
 
 	if (this->buttons["SAVE_SCORES"]->isPressed())
 	{
+		std::thread(&ScoreState::sendRequest, this).detach();
 		sf::sleep(sf::milliseconds(100));
-		this->saveToFile();
 
 	}
 	if (this->buttons["EXIT_STATE"]->isPressed())
@@ -130,33 +129,18 @@ void ScoreState::sendRequest()
 		else {
 			url = "http://localhost:3000/getScores?username=" + accountState->getUsername();
 		}
-		
-		// Set the URL
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
-		// Set the write function callback
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_write);
-
-		// Set the string to store the result
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
-
-		// Optional: Set verbose mode to 1 (for debugging)
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-		// Perform the request
 		res = curl_easy_perform(curl);
-
 		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-
-		// Check for errors
 		if (res != CURLE_OK) {
 			std::cerr << "CURL error: " << curl_easy_strerror(res) << std::endl;
 		}
 		else {
 			handleResponse(result, httpCode);
 		}
-
-		// Cleanup
 		curl_easy_cleanup(curl);
 	}
 
@@ -180,18 +164,6 @@ void ScoreState::handleResponse(const std::string& response, long httpCode)
 	else {
 		std::cerr << "Failed to open file " << filePath << " for writing" << std::endl;
 	}
-
-	// Save the JSON response to a file
-	//std::ofstream outFile("response.json");
-	//if (outFile.is_open()) {
-	//	outFile << std::setw(4) << response << std::endl; // Pretty-print with indentation
-	//	outFile.close();
-	//	std::cout << "Response saved to response.json" << std::endl;
-	//}
-	//else {
-	//	std::cerr << "Failed to open file for writing" << std::endl;
-	//}
-
 	// Handle response based on HTTP status code
 	switch (httpCode) {
 	case 203: // Scores successfully fetched
@@ -199,7 +171,7 @@ void ScoreState::handleResponse(const std::string& response, long httpCode)
 		std::cout << "Fetched scores for user: " << this->accountState->getUsername() << std::endl;
 		break;
 	case 200: // Fetched scores for anonymous user
-		this->serverInformation = "Fetched scores for anonymous user";
+		this->serverInformation = "Fetched scores";
 		std::cout << "Fetched scores for anonymous user\n";
 		break;
 	case 500: // Internal server error
@@ -239,10 +211,11 @@ void ScoreState::render(sf::RenderTarget* target)
 	target->draw(this->background);
 	this->renderButtons(*target);
 
-	this->serverInfo.setPosition(270.f, 170.f);
-	this->serverInfo.setFont(this->font2);
-	this->serverInfo.setCharacterSize(12);
+	this->serverInfo.setPosition(240.f, 240.f);
+	this->serverInfo.setFont(this->font);
+	this->serverInfo.setCharacterSize(24);
 	this->serverInfo.setString(this->serverInformation);
+	this->serverInfo.setFillColor(sf::Color(150, 150, 150, 255));
 	target->draw(this->serverInfo);
 
 	sf::Text mouseText;
@@ -256,6 +229,4 @@ void ScoreState::render(sf::RenderTarget* target)
 	target->draw(mouseText);
 }
 
-void ScoreState::saveToFile()
-{
-}
+

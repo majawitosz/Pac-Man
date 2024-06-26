@@ -26,7 +26,7 @@ public:
 
 
 	//Functions
-	void updateLoginStatus();
+
 	void initBackground();
 	void updateInput(const float& dt) override;
 	void updateButtons();

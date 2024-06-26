@@ -32,17 +32,18 @@ TextInput::TextInput(float x, float y, float width, float height,
 
     this->placeholdertest = placeholder;
     this->text.setFont(*this->font);
-    this->text.setFillColor(sf::Color::Black);
-    this->text.setCharacterSize(12);
-    this->text.setPosition(x + 5.f, y + 10.f);
+    this->text.setFillColor(sf::Color::White);
+    this->text.setCharacterSize(18);
+    this->text.setPosition(x + 10.f, y + 5.f);
       
   
     this->placeholder.setFont(*this->font);
     this->placeholder.setString(placeholder);
-    this->placeholder.setCharacterSize(12);
-    this->placeholder.setFillColor(sf::Color(150, 150, 150));
-    this->placeholder.setPosition(x + 5.f, y + 10.f);
-   
+    this->placeholder.setCharacterSize(16);
+    this->placeholder.setFillColor(sf::Color::Black);
+    this->placeholder.setPosition(x + 10.f, y + 5.f);
+    //rgb(247, 249, 242)
+    //rgb(47, 54, 69)
 }
 
 TextInput::~TextInput()

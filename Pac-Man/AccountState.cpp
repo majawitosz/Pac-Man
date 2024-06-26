@@ -36,16 +36,16 @@ void AccountState::initButtons()
 {
 	this->buttons["LOGIN_STATE"] = new Button(320, 200, 150, 50,
 		&this->font, "LOG IN",
-		sf::Color(70, 70, 70, 200), sf::Color(10, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	this->buttons["REGISTER_STATE"] = new Button(320, 280, 150, 50,
 		&this->font, "REGISTER",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent,  sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	this->buttons["SCORES_STATE"] = new Button(320, 360, 150, 50,
 		&this->font, "SCORES",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	this->buttons["EXIT_STATE"] = new Button(320, 440, 150, 50,
 		&this->font, "BACK",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 
 }
 
@@ -93,10 +93,12 @@ void AccountState::updateInput(const float& dt)
 void AccountState::updateButtons()
 {
 	// Updates all the button in the state
-	for (auto& it : this->buttons)
+	for (auto& button : this->buttons | std::views::values)
 	{
-		it.second->update(this->mousePosView);
+		button->update(this->mousePosView);
 	}
+
+
 	if (this->buttons["REGISTER_STATE"]->isPressed())
 	{
 		sf::sleep(sf::milliseconds(100));

@@ -37,13 +37,13 @@ void MainMenuState::initButtons()
 {
 	this->buttons["GAME_STATE"] = new Button(320, 200, 150, 50,
 		&this->font, "PLAY",
-		sf::Color(70, 70, 70, 200), sf::Color(10, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	this->buttons["ACCOUNT_STATE"] = new Button(320, 280, 150, 50,
 		&this->font, "ACCOUNT",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	this->buttons["EXIT_STATE"] = new Button(320, 360, 150, 50,
 		&this->font, "QUIT",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 
 }
 
@@ -66,19 +66,6 @@ MainMenuState::~MainMenuState()
 
 }
 
-
-
-void MainMenuState::updateLoginStatus()
-{
-	
-
-	//mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
-	//mouseText.setFont(this->font);
-	//mouseText.setCharacterSize(12);
-	//std::stringstream ss;
-	//ss << this->mousePosView.x << " " << this->mousePosView.y;
-	//mouseText.setString(ss.str());
-}
 
 void MainMenuState::initBackground()
 {
@@ -103,10 +90,10 @@ void MainMenuState::updateInput(const float& dt)
 
 void MainMenuState::updateButtons()
 {
-	// Updates all the button in the state
-	for (auto& it : this->buttons)
+
+	for (auto& button : this->buttons | std::views::values)
 	{
-		it.second->update(this->mousePosView);
+		button->update(this->mousePosView);
 	}
 
 	//New game

@@ -13,7 +13,7 @@ void LoginState::initFonts()
 		throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_FONT");
 
 	}
-	if (!this->font2.loadFromFile("Fonts/Roboto-Light.ttf")) {
+	if (!this->font2.loadFromFile("Fonts/RobotoMono-Bold.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_FONT");
 	}
 
@@ -40,10 +40,10 @@ void LoginState::initButtons()
 {
 	this->buttons["SUBMIT"] = new Button(320, 360, 150, 50,
 		&this->font, "SUBMIT",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 	this->buttons["EXIT_STATE"] = new Button(320, 440, 150, 50,
 		&this->font, "BACK",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color::Transparent, sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 
 }
 
@@ -51,10 +51,10 @@ void LoginState::initTextInput()
 {
 	this->textInputs["USERNAME"] = new TextInput(250, 200, 300, 30,
 		&this->font2, "username",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color(70, 70, 70, 180), sf::Color(150, 150, 150, 190), sf::Color(20, 20, 20, 200));
 	this->textInputs["PASSWORD"] = new TextInput(250, 280, 300, 30,
 		&this->font2, "password",
-		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
+		sf::Color(70, 70, 70, 180), sf::Color(150, 150, 150, 190), sf::Color(20, 20, 20, 200));
 
 }
 
@@ -112,10 +112,6 @@ void LoginState::updateButtons()
 		button->update(this->mousePosView);
 	}
 
-	//for (auto& it : this->buttons)
-	//{
-	//	it.second->update(this->mousePosView);
-	//}
 	if (this->buttons["SUBMIT"]->isPressed())
 	{
 		sf::sleep(sf::milliseconds(100));
@@ -223,11 +219,6 @@ void LoginState::handleResponse(const std::string& response, long httpCode, std:
 		//this->logedIn = true;
 		this->mainMenuState->setLoginStatus(true);
 		this->mainMenuState->setUsername(username);
-		
-		//setUsername(username);
-		//setLoginStatus(true);
-		//sf::sleep(sf::milliseconds(1500));
-		//this->endState();
 		break;
 	case 400: // Username doesn't exist
 		this->serverInformation = "Username doesn't exist";

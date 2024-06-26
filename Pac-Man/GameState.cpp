@@ -810,6 +810,7 @@ void GameState::restartGame()
 		this->caughtPacMan = false;
 	}
 	else if (this->lives == 0) {
+
 		this->endState();
 	}
 }
