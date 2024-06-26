@@ -115,6 +115,9 @@ void AnimationComponent::Animation::playEnd(const float& dt)
 		{
 			this->currentRect.left += this->width;
 		}
+		else {
+			this->finishedAnimation = true;
+		}
 		
 		this->sprite.setTextureRect(this->currentRect);
 	}
@@ -164,6 +167,8 @@ void AnimationComponent::addAnimation(
 }
 
 // PlayIdle
+
+
 
 void AnimationComponent::play(const std::string key, const float& dt)
 {

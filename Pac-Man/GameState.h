@@ -11,7 +11,7 @@ class GameState : public State
 private:
 
 	bool caughtPacMan;
-
+	
 	Player* player;
 	TileMap map;
 	Ghosts* blueGhost;
@@ -27,12 +27,10 @@ private:
 	sf::Text scoreText;
 	sf::Text highScore;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
-	bool isWall = false; // do wyjebania
+	bool isWall = false; // do usuniecia
 	bool foundPath = false;
 	bool startedGhost = false;
 	bool ghostFree = false;
-
-	bool test = false;
 	int score;
 	int lives = 3;
 
@@ -60,9 +58,6 @@ public:
 	bool teleportRight();
 	void eatDots();
 
-	void moveRedGhost(const float& dt);
-	void updateRedGhost();
-
 	void startGhosts();
 	bool checkMapGhostIntersect(Ghosts *ghost);
 	void ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds, Ghosts* ghost);
@@ -81,11 +76,12 @@ public:
 	void updateInput(const float& dt) override;
 	void movementManager(const float& dt);
 
-	void lightresetGame();
+	
 	void update(const float& dt) override;
 	void render(sf::RenderTarget* target = nullptr) override;
 
 	void sendRequest(const std::string& username, int score);
+	void restartGame();
 	
 };
 

@@ -174,6 +174,7 @@
     <ClCompile Include="Dot.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOverState.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Ghosts.cpp" />
     <ClCompile Include="HitboxComponent.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="Dot.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameOverState.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Ghosts.h" />
     <ClInclude Include="HitboxComponent.h" />

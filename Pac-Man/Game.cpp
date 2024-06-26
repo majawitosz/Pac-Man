@@ -93,6 +93,11 @@ Game::~Game()
 	}
 }
 
+void Game::setDtclock()
+{
+	this->dtClock.restart().asSeconds();
+}
+
 
 
 

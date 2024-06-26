@@ -40,7 +40,7 @@ public:
 	virtual ~Game();
 
 	//Mofifiers
-
+	void setDtclock();
 
 	//Fucntions
 	void updateDt();

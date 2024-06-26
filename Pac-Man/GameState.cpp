@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "GameState.h"
 
+std::mutex gameMutex;
 
 //Initializer functions
 void GameState::initKeybinds()
@@ -113,7 +114,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initMap();
 	this->initFonts();
 	this->initPacManLives();
-
+	
 }
 
 GameState::~GameState()
@@ -308,48 +309,6 @@ void GameState::eatDots()
 	}
 }
 
-void GameState::moveRedGhost(const float& dt)
-{
-
-	
-	//wszytsko w if Ghost found Player jak tak to wyowalnie funkcji
-	if (!this->redGhost->hasReachedTarget(dt)) {
-		switch (this->redGhost->getMovementComponent()->getDirection())
-		{
-		case 1:
-			this->redGhost->move(-1.f, 0.f, dt);
-			break;
-		default:
-			//this->ghost->getMovementComponent()->stopVelocity();
-			break;
-		}
-	}
-	
-
-}
-
-void GameState::updateRedGhost()
-{
-	/*switch (this->ghost->setRedGhostDirection()) {
-	case 1:
-		this->ghost->getMovementComponent()->setDirection(MOVING_LEFT);
-		break;
-	case 2:
-		this->ghost->getMovementComponent()->setDirection(MOVING_RIGHT);
-		break;
-	case 3: 
-		this->ghost->getMovementComponent()->setDirection(MOVING_UP);
-		break;
-	case 4:
-		this->ghost->getMovementComponent()->setDirection(MOVING_DOWN);
-		break;
-	default:
-		break;
-	}*/
-	
-	
-}
-
 void GameState::startGhosts()
 {
 	if (!this->startedGhost) {
@@ -461,18 +420,18 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 
 void GameState::moveGhost(Ghosts* ghost, const float& dt)
 {
+	
 	if (this->checkPacManGhostCollision(ghost)) {
-		this->stopGame();
-
-		this->lightresetGame();
+		
+		this->restartGame();
+		//sf::sleep(sf::milliseconds(1000));
+		
 	}
 	if (!checkIfGhostMoves(ghost)) {
 		ghost->setGhostDirection(0, 3, 5);
 		
 	}
 	if (!this->checkMapGhostIntersect(ghost) && !isWall && !caughtPacMan) {
-		//this->updateGhost(dt);
-
 		switch (ghost->getMovementComponent()->getDirection())
 		{
 		case 1:
@@ -498,12 +457,9 @@ void GameState::moveGhost(Ghosts* ghost, const float& dt)
 			}
 			break;
 		default:
-			
 			break;
 		}
-
 	}
-
 }
 
 bool GameState::checkPacManGhostCollision(Ghosts* ghost)
@@ -518,22 +474,6 @@ bool GameState::checkPacManGhostCollision(Ghosts* ghost)
 
 	return false;
 }
-
-void GameState::stopGame()
-{
-	if (caughtPacMan) {
-		this->player->getMovementComponent()->stopVelocity();
-		this->blueGhost->getMovementComponent()->stopVelocity();
-		this->redGhost->getMovementComponent()->stopVelocity();
-		this->pinkGhost->getMovementComponent()->stopVelocity();
-		this->yellowGhost->getMovementComponent()->stopVelocity();
-		
-		this->player->getMovementComponent()->setDirection(IDLE);
-		this->player->setEndGame(true);
-		
-	}
-}
-
 
 bool GameState::checkMoveLeft(Entity *entity)
 {
@@ -721,37 +661,27 @@ void GameState::movementManager(const float& dt)
 		
 }
 
-void GameState::lightresetGame()
-{
-	if (!this->pacManLivesSprites.empty())
-		this->pacManLivesSprites.pop_back();
-
-	this->test = false;
-}
-
 void GameState::update(const float& dt)
 {
+	
 		this->updateMousePosition();
 		this->movementManager(dt);
 		this->updateInput(dt);
 		this->eatDots();
-
-		//this->moveRedGhost(dt);
-		//this->updateRedGhost();
 
 		this->startGhosts();
 		this->moveGhost(this->blueGhost, dt);
 		this->moveGhost(this->redGhost, dt);
 		this->moveGhost(this->pinkGhost, dt);
 		this->moveGhost(this->yellowGhost, dt);
-		bool test = false;
-
+		
+		this->player->update(dt);
 		this->blueGhost->update(dt);
 		this->redGhost->update(dt);
 		this->pinkGhost->update(dt);
 		this->yellowGhost->update(dt);
 
-		this->player->update(dt);
+		
 		this->display();
 	
 }
@@ -777,13 +707,11 @@ void GameState::render(sf::RenderTarget* target)
 	target->draw(this->scoreTextPoints);
 	target->draw(this->scoreText);
 	target->draw(this->highScore);
-	//for (int i = 0; i < this->lives; ++i) {
-	//	target->draw(this->pacManLivesSprites[i]);
-	//}
 	
-	for (const auto& sprite : this->pacManLivesSprites) {
+	
+	/*for (const auto& sprite : this->pacManLivesSprites) {
 		target->draw(sprite);
-	}
+	}*/
 
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
@@ -856,5 +784,35 @@ void GameState::sendRequest(const std::string& username, int score)
 	}
 
 	curl_global_cleanup();
+}
+
+void GameState::restartGame()
+{
+	//sf::sleep(sf::milliseconds(500));
+	if (!caughtPacMan) {
+		this->player->getMovementComponent()->stopVelocity();
+		this->blueGhost->getMovementComponent()->stopVelocity();
+		this->redGhost->getMovementComponent()->stopVelocity();
+		this->pinkGhost->getMovementComponent()->stopVelocity();
+		this->yellowGhost->getMovementComponent()->stopVelocity();
+		this->player->getMovementComponent()->setDirection(IDLE);
+		this->player->setEndGame(true);
+	}
+
+	//if (!this->pacManLivesSprites.empty())
+		//this->pacManLivesSprites.pop_back();
+
+	if (this->lives > 0) {
+		this->lives -= 1;
+		this->caughtPacMan = false;
+		this->player->setPosition(220, 420);
+		this->blueGhost->setPosition(225, 270);
+		this->redGhost->setPosition(225, 270);
+		this->pinkGhost->setPosition(225, 270);
+		this->yellowGhost->setPosition(225, 270); 
+	}
+	else if (this->lives == 0) {
+		this->endState();
+	}
 }
 

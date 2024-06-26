@@ -17,6 +17,7 @@ private:
 		sf::IntRect startRect;
 		sf::IntRect currentRect;
 		sf::IntRect endRect;
+		bool finishedAnimation = false;
 		Animation(sf::Sprite& sprite, sf::Texture& texture_sheet, float animation_timer,
 			int start_x, int start_y, int frames_x, int frames_y, int width, int height);
 
@@ -33,6 +34,7 @@ private:
 	sf::Sprite& sprite;
 	sf::Texture& textureSheet;
 	std::map<std::string, Animation*> animations;
+	
 public:
 	AnimationComponent(sf::Sprite& sprite, sf::Texture& textureSheet);
 	virtual ~AnimationComponent();
