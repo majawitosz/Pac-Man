@@ -90,6 +90,9 @@
     <ClCompile Include="TextInput.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="LoginState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="TextInput.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginState.h">
+      <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

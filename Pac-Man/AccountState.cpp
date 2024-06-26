@@ -104,6 +104,14 @@ void AccountState::updateButtons()
 		this->states->push(new RegisterState(this->window, this->supportedKeys, this->states));
 		
 	}
+	else if (this->buttons["LOGIN_STATE"]->isPressed()) {
+		sf::sleep(sf::milliseconds(100));
+		LoginState* loginState = new LoginState(this->window, this->supportedKeys, this->states);
+		this->states->push(loginState);
+		//this->states->push(new LoginState(this->window, this->supportedKeys, this->states));
+
+	}
+
 	
 	else if (this->buttons["EXIT_STATE"]->isPressed())
 	{

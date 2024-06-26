@@ -18,10 +18,13 @@ private:
     std::string input;
 
     std::string placeholdertest;
+    std::vector<std::string> information;
+    std::string info;
 
     sf::Color idleColor;
     sf::Color hoverColor;
     sf::Color activeColor;
+    void initInfo();
 
     bool isActive;
 public:
@@ -30,8 +33,10 @@ public:
         sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor);
     virtual ~TextInput();
     const bool getIsActive() const;
- 
-   
+    const std::string getUserInput() const;
+    void clearInput();
+    std::vector<std::string> getInformationText();
+
     void handleEvent(sf::Event event);
     void update(const sf::Vector2f mousePos);
     void render(sf::RenderTarget& target);

@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include "RegisterState.h"
+#include "LoginState.h"
 
 
 
-void RegisterState::initVariables()
+void LoginState::initVariables()
 {
 }
 
-void RegisterState::initFonts()
+void LoginState::initFonts()
 {
 	if (!this->font.loadFromFile("Fonts/Emulogic-zrEw.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_FONT");
@@ -19,7 +19,7 @@ void RegisterState::initFonts()
 
 }
 
-void RegisterState::initKeybinds()
+void LoginState::initKeybinds()
 {
 	std::ifstream file("Config/mainmenustate_keybinds.ini");
 
@@ -36,7 +36,7 @@ void RegisterState::initKeybinds()
 	file.close();
 }
 
-void RegisterState::initButtons()
+void LoginState::initButtons()
 {
 	this->buttons["SUBMIT"] = new Button(320, 360, 150, 50,
 		&this->font, "SUBMIT",
@@ -47,18 +47,18 @@ void RegisterState::initButtons()
 
 }
 
-void RegisterState::initTextInput()
+void LoginState::initTextInput()
 {
-	this->textInputs["USERNAME"] = new TextInput(250, 200, 300, 30, 
-		&this->font2, "username", 
+	this->textInputs["USERNAME"] = new TextInput(250, 200, 300, 30,
+		&this->font2, "username",
 		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
-	this->textInputs["PASSWORD"] = new TextInput(250, 280, 300, 30, 
-		&this->font2, "password", 
+	this->textInputs["PASSWORD"] = new TextInput(250, 280, 300, 30,
+		&this->font2, "password",
 		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 255), sf::Color(20, 20, 20, 200));
 
 }
 
-RegisterState::RegisterState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
+LoginState::LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
 	: State(window, supportedKeys, states)
 {
 	this->initVariables();
@@ -70,7 +70,7 @@ RegisterState::RegisterState(sf::RenderWindow* window, std::map<std::string, int
 
 }
 
-RegisterState::~RegisterState()
+LoginState::~LoginState()
 {
 	auto it = this->buttons.begin();
 	for (it = this->buttons.begin(); it != this->buttons.end(); ++it) {
@@ -81,7 +81,7 @@ RegisterState::~RegisterState()
 
 
 
-void RegisterState::initBackground()
+void LoginState::initBackground()
 {
 	this->background.setSize(
 		sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
@@ -95,14 +95,14 @@ void RegisterState::initBackground()
 }
 
 
-void RegisterState::updateInput(const float& dt)
+void LoginState::updateInput(const float& dt)
 {
 	//this->endStateUpdate();
 
 
 }
 
-void RegisterState::updateButtons()
+void LoginState::updateButtons()
 {
 	// Updates all the button in the state
 	for (auto& button : this->buttons | std::views::values)
@@ -118,7 +118,8 @@ void RegisterState::updateButtons()
 	{
 		sf::sleep(sf::milliseconds(100));
 
-		this->checkRegex();
+		std::thread(&LoginState::sendRequest, this).detach();
+		//this->checkRegex();
 	}
 	if (this->buttons["EXIT_STATE"]->isPressed())
 	{
@@ -128,7 +129,7 @@ void RegisterState::updateButtons()
 
 }
 
-void RegisterState::updateTextInputs()
+void LoginState::updateTextInputs()
 {
 	for (auto& it : this->textInputs)
 	{
@@ -136,24 +137,7 @@ void RegisterState::updateTextInputs()
 	}
 }
 
-void RegisterState::checkRegex()
-{
-	std::string username = this->textInputs["USERNAME"]->getUserInput();
-	std::string password = this->textInputs["PASSWORD"]->getUserInput();
 
-	if (!this->isValidPassword(password) || !this->isValidUsername(username)) {
-		for (auto& it : this->textInputs)
-		{
-			it.second->clearInput();
-			this->displayInfo = true;
-		}
-	} 
-	else {
-		std::thread(&RegisterState::sendRequest, this).detach();
-		
-	}
-
-}
 static size_t my_write(void* buffer, size_t size, size_t nmemb, void* param)
 {
 	std::string& text = *static_cast<std::string*>(param);
@@ -161,7 +145,7 @@ static size_t my_write(void* buffer, size_t size, size_t nmemb, void* param)
 	text.append(static_cast<char*>(buffer), totalsize);
 	return totalsize;
 }
-void RegisterState::sendRequest()
+void LoginState::sendRequest()
 {
 	CURL* curl;
 	CURLcode res;
@@ -172,7 +156,7 @@ void RegisterState::sendRequest()
 	curl = curl_easy_init();
 
 	if (curl) {
-		std::string url = "http://localhost:3000/register";
+		std::string url = "http://localhost:3000/login";
 		std::string username = this->textInputs["USERNAME"]->getUserInput();
 		std::string password = this->textInputs["PASSWORD"]->getUserInput();
 		std::string postFields = "username=" + username + "&password=" + password;
@@ -206,7 +190,7 @@ void RegisterState::sendRequest()
 		}
 		else {
 			//std::cout << "Response: " << result << std::endl;
-			handleResponse(result, httpCode);
+			handleResponse(result, httpCode, username);
 		}
 
 		// Cleanup
@@ -217,7 +201,7 @@ void RegisterState::sendRequest()
 
 }
 
-void RegisterState::handleResponse(const std::string& response, long httpCode)
+void LoginState::handleResponse(const std::string& response, long httpCode, std::string username)
 {
 	json jsonResponse;
 	try {
@@ -230,49 +214,36 @@ void RegisterState::handleResponse(const std::string& response, long httpCode)
 
 	// Handle response based on HTTP status code
 	switch (httpCode) {
-	case 200: // Registration successful
-		this->serverInformation = "Registration successful";
-		std::cout << "Registration successful\n";
-		sf::sleep(sf::milliseconds(1500));
-		this->endState();
+	case 201: // Login successful
+		this->serverInformation = "Login successful";
+		std::cout << "Login successful\n";
+		this->userName = username;
+		this->logedIn = true;
+		//setUsername(username);
+		//setLoginStatus(true);
+		//sf::sleep(sf::milliseconds(1500));
+		//this->endState();
 		break;
-	case 400: // Username already exists
-		if (jsonResponse.contains("error") && jsonResponse["error"] == "Username already exists") {
-			this->serverInformation = "Username already exists";
-			std::cout << "Username already exists\n";
-		}
-		else {
-			this->serverInformation = "Bad request";
-			std::cout << "Bad request\n";
-		}
-		//this->displayInfo = true;
+	case 400: // Username doesn't exist
+		this->serverInformation = "Username doesn't exist";
+		std::cout << "Username doesn't exist\n";
+		break;
+	case 401: // Wrong password
+		this->serverInformation = "Wrong password";
+		std::cout << "Wrong password\n";
 		break;
 	case 500: // Internal server error
 		this->serverInformation = "Internal server error";
 		std::cout << "Internal server error\n";
-		//this->displayInfo = true;
 		break;
 	default:
 		this->serverInformation = "Unknown error occurred";
 		std::cout << "Unknown error occurred\n";
-		//this->displayInfo = true;
 		break;
 	}
 }
 
-bool RegisterState::isValidPassword(const std::string& password)
-{
-	std::regex password_regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
-	return std::regex_match(password, password_regex);
-}
-
-bool RegisterState::isValidUsername(const std::string& username)
-{
-	std::regex username_regex("^[a-zA-Z0-9]{5,12}$");
-	return std::regex_match(username, username_regex);
-}
-
-void RegisterState::handleEvent(sf::Event event)
+void LoginState::handleEvent(sf::Event event)
 {
 	if (event.type == sf::Event::Closed) {
 		this->window->close();
@@ -286,7 +257,7 @@ void RegisterState::handleEvent(sf::Event event)
 }
 
 
-void RegisterState::update(const float& dt)
+void LoginState::update(const float& dt)
 {
 	this->updateMousePosition();
 	this->updateInput(dt);
@@ -294,22 +265,22 @@ void RegisterState::update(const float& dt)
 	this->updateTextInputs();
 }
 
-void RegisterState::renderButtons(sf::RenderTarget& target)
+void LoginState::renderButtons(sf::RenderTarget& target)
 {
 	for (auto& it : this->buttons) {
 		it.second->render(target);
 	}
 }
 
-void RegisterState::renderTextInput(sf::RenderTarget& target)
+void LoginState::renderTextInput(sf::RenderTarget& target)
 {
 	for (auto& it : this->textInputs) {
 		it.second->render(target);
 	}
-	
+
 }
 
-void RegisterState::render(sf::RenderTarget* target)
+void LoginState::render(sf::RenderTarget* target)
 {
 	if (!target)
 		target = this->window;
@@ -348,8 +319,4 @@ void RegisterState::render(sf::RenderTarget* target)
 	mouseText.setString(ss.str());
 
 	target->draw(mouseText);
-	
-
-
-	
 }

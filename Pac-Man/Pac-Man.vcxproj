@@ -177,6 +177,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Ghosts.cpp" />
     <ClCompile Include="HitboxComponent.cpp" />
+    <ClCompile Include="LoginState.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="Pac-Man.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Ghosts.h" />
     <ClInclude Include="HitboxComponent.h" />
+    <ClInclude Include="LoginState.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="Player.h" />

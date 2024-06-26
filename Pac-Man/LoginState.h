@@ -4,8 +4,7 @@
 #include "Button.h"
 #include "TextInput.h"
 
-
-class RegisterState : public State
+class LoginState : public State
 {
 private:
 	sf::Event event;
@@ -19,7 +18,9 @@ private:
 	sf::Text serverInfo;
 	std::string serverInformation;
 	bool displayInfo = false;
-	
+	bool loggedIn = false;
+	std::string username;
+
 	//Functions
 	void initVariables();
 	void initFonts();
@@ -27,19 +28,24 @@ private:
 	void initButtons();
 	void initTextInput();
 public:
-	RegisterState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
-	virtual ~RegisterState();
+	LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	virtual ~LoginState();
 
 	//Functions
 	void initBackground();
 	void updateInput(const float& dt) override;
 	void updateButtons();
 	void updateTextInputs();
-	void checkRegex();
+	
 	void sendRequest();
-	void handleResponse(const std::string& response, long httpCode);
-	bool isValidPassword(const std::string& password);
-	bool isValidUsername(const std::string& username);
+	void handleResponse(const std::string& response, long httpCode, std::string username);
+	bool getLoginStatus() const {
+		return loggedIn;
+	}
+
+	std::string getUsername() const {
+		return username;
+	}
 
 	void handleEvent(sf::Event event) override;
 
@@ -47,5 +53,6 @@ public:
 	void renderButtons(sf::RenderTarget& target);
 	void renderTextInput(sf::RenderTarget& target);
 	void render(sf::RenderTarget* target = nullptr) override;
+
 };
 

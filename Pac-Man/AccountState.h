@@ -3,6 +3,7 @@
 #include "State.h"
 #include "Button.h"
 #include "RegisterState.h"
+#include "LoginState.h"
 
 class AccountState : public State
 {

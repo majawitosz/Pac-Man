@@ -4,6 +4,7 @@
 
 void MainMenuState::initVariables()
 {
+	
 }
 
 void MainMenuState::initFonts()
@@ -67,6 +68,18 @@ MainMenuState::~MainMenuState()
 
 
 
+void MainMenuState::updateLoginStatus()
+{
+	
+
+	//mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
+	//mouseText.setFont(this->font);
+	//mouseText.setCharacterSize(12);
+	//std::stringstream ss;
+	//ss << this->mousePosView.x << " " << this->mousePosView.y;
+	//mouseText.setString(ss.str());
+}
+
 void MainMenuState::initBackground()
 {
 	this->background.setSize(
@@ -109,6 +122,7 @@ void MainMenuState::updateButtons()
 	//Quit the game
 	else if (this->buttons["EXIT_STATE"]->isPressed())
 	{
+		sf::sleep(sf::milliseconds(100));
 		this->endState();
 	}
 
@@ -136,6 +150,16 @@ void MainMenuState::render(sf::RenderTarget* target)
 	target->draw(this->background);
 
 	this->renderButtons(*target);
+	
+
+	if (getLoginStatus()) {
+		this->loginStatus.setPosition(300.f, 150.f);
+		this->loginStatus.setFont(this->font);
+		this->loginStatus.setCharacterSize(12);
+		std::string ss = "User: " + getUsername();
+		this->loginStatus.setString(ss);
+		target->draw(this->loginStatus);
+	}
 
 	sf::Text mouseText;
 	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
