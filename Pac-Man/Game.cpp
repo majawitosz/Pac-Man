@@ -7,19 +7,16 @@ void Game::initVariables()
 	this->window = nullptr;
 	this->fullscreen = false;
 	this->dt = 0.f;
-	
 }
 
 void Game::initWindow()
 {
 	/* Creates SFML window using options from a window.ini file */
-
 	std::ifstream file("Config/window.ini");
 	this->videoModes = sf::VideoMode::getFullscreenModes();
 
 	std::string title = "None";
 	sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
-
 
 	bool fullscreen = false;
 	unsigned framerate_limit = 120;
@@ -44,33 +41,23 @@ void Game::initWindow()
 		this->window = std::make_unique<sf::RenderWindow>(window_bounds, title, sf::Style::Titlebar | sf::Style::Close, this->windowSettings);
 	this->window->setFramerateLimit(framerate_limit);
 	this->window->setVerticalSyncEnabled(vertical_sync_enabled);
-
 }
-
-
 
 void Game::initKeys()
 {
 	std::ifstream file("Config/supported_keys.ini");
-
 	if (file.is_open()) {
-
 		std::string key = "";
 		int keyValue = 0;
-
 		while (file >> key >> keyValue) {
 			this->supportedKeys[key] = keyValue;
 		}
 	}
-
 	file.close();
-
 }
 
 void Game::initStates()
 {
-
-	//this->states.push(new GameState(this->window, &this->supportedKeys, &this->states));
 	this->states.push(new MainMenuState(this->window.get(), &this->supportedKeys, &this->states));
 }
 
@@ -80,13 +67,10 @@ Game::Game()
 	this->initWindow();
 	this->initKeys();
 	this->initStates();
-
 }
 
 Game::~Game()
 {
-	//delete this->window;
-
 	while (!this->states.empty()) {
 		delete this->states.top();
 		this->states.pop();
@@ -98,9 +82,6 @@ void Game::setDtclock()
 	this->dtClock.restart().asSeconds();
 }
 
-
-
-
 //Functions
 void Game::updateSFMLEvents()
 {
@@ -111,14 +92,12 @@ void Game::updateSFMLEvents()
 		}
 		if (this->event.type == sf::Event::Closed)
 			this->window->close();
-		
 	}
 }
 
 void Game::updateDt()
 {
 	/* Updates the dt variable with the time it takes to update and render one frame. */
-
 	this->dt = this->dtClock.restart().asSeconds();
 }
 
@@ -133,13 +112,10 @@ void Game::update()
 		
 		if (this->states.top()->getQuit())
 		{
-		
 			this->states.top()->endState();
 			delete this->states.top();
 			this->states.pop();
-			
 		}
-
 	}
 	//Application end
 	else
@@ -147,9 +123,7 @@ void Game::update()
 		this->endGame();
 		this->window->close();
 	}
-
 }
-
 
 void Game::render()
 {
@@ -161,18 +135,14 @@ void Game::render()
 	this->window->display();
 }
 
-
 void Game::run()
 {
-	
-		while (this->window->isOpen())
-		{
-			this->update();
-			this->updateDt();
-			this->render();
-		}
-	
-	
+	while (this->window->isOpen())
+	{
+		this->update();
+		this->updateDt();
+		this->render();
+	}
 }
 
 void Game::endGame()

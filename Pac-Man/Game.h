@@ -1,14 +1,11 @@
 #pragma once
-
 #include "MainMenuState.h"
-
 
 class Game
 {
 private:
 	//Variables
 	//Window
-
 	std::unique_ptr<sf::RenderWindow> window;
 	sf::Event event;
 	std::vector<sf::VideoMode> videoModes;
@@ -23,16 +20,11 @@ private:
 	//States
 	std::stack<State*> states;
 
-
-
 	//Initialization
 	void initVariables();
 	void initWindow();
 	void initKeys();
 	void initStates();
-
-
-
 
 public:
 	//Constructor and deconstructor
@@ -48,7 +40,6 @@ public:
 	void update();
 	void render();
 	void run();
-	
 	void endGame();
 };
 
