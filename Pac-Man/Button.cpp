@@ -62,9 +62,10 @@ void Button::update(const sf::Vector2f mousePos)
 	{
 	case BTN_IDLE:
 		this->button.setFillColor(this->idleColor);
+		this->text.setFillColor(sf::Color::White);
 		break;
 	case BTN_HOVER:
-		this->button.setFillColor(this->hoverColor);
+		this->text.setFillColor(this->hoverColor);
 		break;
 	case BTN_ACTIVE:
 		this->button.setFillColor(this->activeColor);
@@ -81,3 +82,4 @@ void Button::render(sf::RenderTarget& target)
 	target.draw(this->button);
 	target.draw(this->text);
 }
+

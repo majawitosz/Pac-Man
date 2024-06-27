@@ -3,7 +3,7 @@
 #include "TileMap.h"
 #include "Ghosts.h"
 #include "Dot.h"
-
+#include "GameOverState.h"
 
 
 class GameState : public State
@@ -11,7 +11,7 @@ class GameState : public State
 private:
 
 	bool caughtPacMan;
-
+	
 	Player* player;
 	TileMap map;
 	Ghosts* blueGhost;
@@ -27,17 +27,12 @@ private:
 	sf::Text scoreText;
 	sf::Text highScore;
 	int direction; // 0 - left, 1 - right, 2 - up, 3 - down
-	bool isWall = false; // do wyjebania
 	bool foundPath = false;
 	bool startedGhost = false;
 	bool ghostFree = false;
-
-	bool test = false;
 	int score;
-	int lives = 3;
+	int lives = 2;
 
-
-	
 	//Initializer functions
 	void initKeybinds();
 	void initTextures();
@@ -49,7 +44,7 @@ private:
 
 	
 public:
-	GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+	GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::string userName);
 	virtual ~GameState();
 
 	//Functions
@@ -59,9 +54,6 @@ public:
 	bool teleportLeft();
 	bool teleportRight();
 	void eatDots();
-
-	void moveRedGhost(const float& dt);
-	void updateRedGhost();
 
 	void startGhosts();
 	bool checkMapGhostIntersect(Ghosts *ghost);
@@ -81,9 +73,12 @@ public:
 	void updateInput(const float& dt) override;
 	void movementManager(const float& dt);
 
-	void lightresetGame();
+	
 	void update(const float& dt) override;
 	void render(sf::RenderTarget* target = nullptr) override;
+
+	void sendRequest(const std::string& username, int score);
+	void restartGame();
 	
 };
 

@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "GameState.h"
 
+std::mutex gameMutex;
 
 //Initializer functions
 void GameState::initKeybinds()
@@ -102,10 +103,10 @@ void GameState::initMap()
 	map.loadMapDotsFromFile("Resources/Map/dots.txt");
 }
 
-GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
+GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::string userName)
 	: State(window, supportedKeys, states), caughtPacMan(false)
 {
-
+	this->username = userName;
 	this->initKeybinds();
 	this->initTextures();
 	this->initPlayers();
@@ -113,7 +114,6 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initMap();
 	this->initFonts();
 	this->initPacManLives();
-
 	
 }
 
@@ -194,7 +194,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(left1, this->player->getPosition().top);
 		//std::cout << "Left: " << left1 << std::endl;
-		isWall = true;
+		//isWall = true;
 		//if (this->ghost->findPath(map, this->player->getPosition()))
 		//	this->foundPath = true;
 		
@@ -209,7 +209,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(right1, this->player->getPosition().top);
 		//std::cout << "Right: " << right1 << std::endl;
-		isWall = true;
+		//isWall = true;
 	}
 
 	// Up
@@ -221,7 +221,7 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 		
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(this->player->getPosition().left, up1);
-		isWall = true;
+		//isWall = true;
 		//std::cout << "Up: " << up1 << std::endl;
 	}
 	// Down
@@ -233,10 +233,10 @@ void GameState::collisionManagement(sf::FloatRect playerBounds, sf::FloatRect wa
 		
 		this->player->getMovementComponent()->stopVelocity();
 		this->player->setPosition(this->player->getPosition().left, down1);
-		isWall = true;
+		//isWall = true;
 		//std::cout << "Down: " << down1 << std::endl;
 	}
-	isWall = false;
+	//isWall = false;
 }
 
 bool GameState::teleportLeft()
@@ -309,48 +309,6 @@ void GameState::eatDots()
 	}
 }
 
-void GameState::moveRedGhost(const float& dt)
-{
-
-	
-	//wszytsko w if Ghost found Player jak tak to wyowalnie funkcji
-	if (!this->redGhost->hasReachedTarget(dt)) {
-		switch (this->redGhost->getMovementComponent()->getDirection())
-		{
-		case 1:
-			this->redGhost->move(-1.f, 0.f, dt);
-			break;
-		default:
-			//this->ghost->getMovementComponent()->stopVelocity();
-			break;
-		}
-	}
-	
-
-}
-
-void GameState::updateRedGhost()
-{
-	/*switch (this->ghost->setRedGhostDirection()) {
-	case 1:
-		this->ghost->getMovementComponent()->setDirection(MOVING_LEFT);
-		break;
-	case 2:
-		this->ghost->getMovementComponent()->setDirection(MOVING_RIGHT);
-		break;
-	case 3: 
-		this->ghost->getMovementComponent()->setDirection(MOVING_UP);
-		break;
-	case 4:
-		this->ghost->getMovementComponent()->setDirection(MOVING_DOWN);
-		break;
-	default:
-		break;
-	}*/
-	
-	
-}
-
 void GameState::startGhosts()
 {
 	if (!this->startedGhost) {
@@ -393,17 +351,9 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 	{
 		int left = static_cast<int>(std::ceil(ghost->getPosition().left));
 		left = roundToNearestMultipleOf16(left) + 3;
-
 		float left1 = static_cast<float>(left);
-
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(left1, ghost->getPosition().top);
-		//std::cout << "Left: " << left1 << std::endl;
-		isWall = true;
-		//if (this->ghost->findPath(map, this->player->getPosition()))
-		//	this->foundPath = true;
-
-
 		ghost->setGhostDirection(0, 3,0);
 	}
 	// Right
@@ -412,14 +362,10 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 		int right = static_cast<int>(std::floor(ghost->getPosition().left));
 		right = roundToNearestMultipleOf16(right) + 3;
 		float right1 = static_cast<float>(right);
-
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(right1, ghost->getPosition().top);
-		//std::cout << "Right: " << right1 << std::endl;
-		isWall = true;
 		ghost->setGhostDirection(0, 3, 1);
 	}
-
 	// Up
 	if (ghostBounds.top > wallBounds.top - wallBounds.height && ghost->getMovementComponent()->getDirection() == MOVING_UP)
 	{
@@ -431,15 +377,12 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 			int up = static_cast<int>(std::ceil(ghost->getPosition().top));
 			up = roundToNearestMultipleOf16(up) + 3;
 			float up1 = static_cast<float>(up);
-
 			ghost->getMovementComponent()->stopVelocity();
 			ghost->setPosition(ghost->getPosition().left, up1);
-			isWall = true;
-			//std::cout << "Up: " << up1 << std::endl;
-			if (!this->ghostFree) {
+			/*if (!this->ghostFree) {
 				ghost->setGhostDirection(0, 1, 3);
 			}
-			this->ghostFree = true;
+			this->ghostFree = true;*/
 			ghost->setGhostDirection(0, 3, 2);
 		}
 	}
@@ -449,31 +392,25 @@ void GameState::ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRec
 		int down = static_cast<int>(std::floor(ghost->getPosition().top));
 		down = roundToNearestMultipleOf16(down) + 3;
 		float down1 = static_cast<float>(down);
-
 		ghost->getMovementComponent()->stopVelocity();
 		ghost->setPosition(ghost->getPosition().left, down1);
-		isWall = true;
-		//std::cout << "Down: " << down1 << std::endl;
 		ghost->setGhostDirection(0, 3 ,3);
 	}
-	isWall = false;
-	
 }
 
 void GameState::moveGhost(Ghosts* ghost, const float& dt)
 {
+	
 	if (this->checkPacManGhostCollision(ghost)) {
-		this->stopGame();
-
-		this->lightresetGame();
+		
+		this->restartGame();
+		
 	}
 	if (!checkIfGhostMoves(ghost)) {
 		ghost->setGhostDirection(0, 3, 5);
 		
 	}
-	if (!this->checkMapGhostIntersect(ghost) && !isWall && !caughtPacMan) {
-		//this->updateGhost(dt);
-
+	if (!this->checkMapGhostIntersect(ghost)  && !caughtPacMan) {
 		switch (ghost->getMovementComponent()->getDirection())
 		{
 		case 1:
@@ -499,12 +436,9 @@ void GameState::moveGhost(Ghosts* ghost, const float& dt)
 			}
 			break;
 		default:
-			
 			break;
 		}
-
 	}
-
 }
 
 bool GameState::checkPacManGhostCollision(Ghosts* ghost)
@@ -518,20 +452,6 @@ bool GameState::checkPacManGhostCollision(Ghosts* ghost)
 	}
 
 	return false;
-}
-
-void GameState::stopGame()
-{
-	if (caughtPacMan) {
-		this->player->getMovementComponent()->stopVelocity();
-		this->blueGhost->getMovementComponent()->stopVelocity();
-		this->redGhost->getMovementComponent()->stopVelocity();
-		this->pinkGhost->getMovementComponent()->stopVelocity();
-		this->yellowGhost->getMovementComponent()->stopVelocity();
-		
-		this->player->getMovementComponent()->setDirection(IDLE);
-		this->player->setEndGame(true);
-	}
 }
 
 
@@ -676,6 +596,12 @@ void GameState::updateInput(const float& dt)
 		
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE")))) {
+		if (this->username == "") {
+			this->sendRequest("anonymousUser", this->score);
+		}
+		else {
+			this->sendRequest(username, this->score);
+		}
 		this->endState();
 	}		
 }
@@ -715,39 +641,25 @@ void GameState::movementManager(const float& dt)
 		
 }
 
-void GameState::lightresetGame()
-{
-	if (!this->pacManLivesSprites.empty())
-		this->pacManLivesSprites.pop_back();
-
-	this->test = false;
-}
-
 void GameState::update(const float& dt)
 {
 		this->updateMousePosition();
 		this->movementManager(dt);
 		this->updateInput(dt);
 		this->eatDots();
-
-		//this->moveRedGhost(dt);
-		//this->updateRedGhost();
-
-		this->startGhosts();
-		this->moveGhost(this->blueGhost, dt);
-		this->moveGhost(this->redGhost, dt);
-		this->moveGhost(this->pinkGhost, dt);
-		this->moveGhost(this->yellowGhost, dt);
-		bool test = false;
-
-		this->blueGhost->update(dt);
-		this->redGhost->update(dt);
-		this->pinkGhost->update(dt);
-		this->yellowGhost->update(dt);
-
-		this->player->update(dt);
-		this->display();
-	
+		if (!this->caughtPacMan) {
+			this->startGhosts();
+			this->moveGhost(this->blueGhost, dt);
+			this->moveGhost(this->redGhost, dt);
+			this->moveGhost(this->pinkGhost, dt);
+			this->moveGhost(this->yellowGhost, dt);
+			this->player->update(dt);
+			this->blueGhost->update(dt);
+			this->redGhost->update(dt);
+			this->pinkGhost->update(dt);
+			this->yellowGhost->update(dt);
+		}
+		this->display();	
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -771,23 +683,102 @@ void GameState::render(sf::RenderTarget* target)
 	target->draw(this->scoreTextPoints);
 	target->draw(this->scoreText);
 	target->draw(this->highScore);
-	//for (int i = 0; i < this->lives; ++i) {
-	//	target->draw(this->pacManLivesSprites[i]);
-	//}
 	
 	for (const auto& sprite : this->pacManLivesSprites) {
 		target->draw(sprite);
+	}	
+}
+
+static size_t my_write(void* buffer, size_t size, size_t nmemb, void* param)
+{
+	std::string& text = *static_cast<std::string*>(param);
+	size_t totalsize = size * nmemb;
+	text.append(static_cast<char*>(buffer), totalsize);
+	return totalsize;
+}
+
+void GameState::sendRequest(const std::string& username, int score)
+{
+	CURL* curl;
+	CURLcode res;
+	std::string result;
+	long httpCode = 0;
+
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+	curl = curl_easy_init();
+
+	if (curl) {
+		std::string url = "http://localhost:3000/addScore";
+		std::string postFields = "username=" + username + "&score=" + std::to_string(score);
+
+		// Set the URL
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+		// Set POST request
+		curl_easy_setopt(curl, CURLOPT_POST, 1L);
+
+		// Set POST fields
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postFields.c_str());
+
+		// Set the write function callback
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_write);
+
+		// Set the string to store the result
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
+
+		// Optional: Set verbose mode to 1 (for debugging)
+		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+		// Perform the request
+		res = curl_easy_perform(curl);
+
+		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+
+		// Check for errors
+		if (res != CURLE_OK) {
+			std::cerr << "CURL error: " << curl_easy_strerror(res) << std::endl;
+		}
+		else {
+			std::cout << "Response: " << result << std::endl;
+			// handleResponse(result, httpCode); // Implement this function to handle the response
+		}
+
+		// Cleanup
+		curl_easy_cleanup(curl);
 	}
 
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 10);
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(12);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
+	curl_global_cleanup();
+}
 
-	target->draw(mouseText);
+void GameState::restartGame()
+{
+
+	this->player->getMovementComponent()->stopVelocity();
+	this->blueGhost->getMovementComponent()->stopVelocity();
+	this->redGhost->getMovementComponent()->stopVelocity();
+	this->pinkGhost->getMovementComponent()->stopVelocity();
+	this->yellowGhost->getMovementComponent()->stopVelocity();
+	this->player->getMovementComponent()->setDirection(IDLE);
+	sf::sleep(sf::milliseconds(500));
 	
+	
+	if (!this->pacManLivesSprites.empty())
+		this->pacManLivesSprites.pop_back();
+
+	if (this->lives > 0) {
+		this->lives -= 1;
+		this->player->setPosition(220, 420);
+		this->blueGhost->setPosition(225, 270);
+		this->redGhost->setPosition(225, 270);
+		this->pinkGhost->setPosition(225, 270);
+		this->yellowGhost->setPosition(225, 270);
+		this->caughtPacMan = false;
+	}
+	else if (this->lives == 0) {
+
+
+		this->states->push(new GameOverState(this->window, this->states));
+		this->endState();
+	}
 }
 

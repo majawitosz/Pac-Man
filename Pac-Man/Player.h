@@ -11,7 +11,7 @@ private:
     bool endGame;
     //Initializaer functions
     void initVariables();
-   
+    bool finishedAnimation = false;
    
 
 public:

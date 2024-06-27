@@ -84,7 +84,7 @@ void TileMap::loadMapFromFile(const std::string& filePath)
 			bool isWall = (line[x] == '1');
 			bool isTunnel = (line[x] == '2');
 			this->map[x][y][0] = Tile(x * this->gridSizeF, y * this->gridSizeF, this->gridSizeF, isWall, isTunnel, x, y);
-			//std::cout << x << " " << y << std::endl;
+
 		}
 		++y;
 	}
