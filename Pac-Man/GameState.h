@@ -4,6 +4,7 @@
 #include "Ghosts.h"
 #include "Dot.h"
 #include "GameOverState.h"
+#include "WonGameState.h"
 
 
 class GameState : public State
@@ -60,7 +61,7 @@ public:
 	void ghostCollisionManagement(sf::FloatRect ghostBounds, sf::FloatRect wallBounds, Ghosts* ghost);
 	void moveGhost(Ghosts* ghost, const float& dt);
 	bool checkPacManGhostCollision(Ghosts* ghost);
-	void stopGame();
+	
 
 	bool checkMoveLeft(Entity *entity);
 	bool checkMoveRight(Entity* entity);

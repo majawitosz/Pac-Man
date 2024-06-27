@@ -62,7 +62,6 @@ LoginState::LoginState(sf::RenderWindow* window, std::map<std::string, int>* sup
 	std::stack<State*>* states, AccountState* accountState, MainMenuState* mainMenuState)
 	: State(window, supportedKeys, states), accountState(accountState), mainMenuState(mainMenuState)
 {
-	//this->accountState = nullptr;
 	this->initVariables();
 	this->initBackground();
 	this->initFonts();
@@ -111,20 +110,16 @@ void LoginState::updateButtons()
 	{
 		button->update(this->mousePosView);
 	}
-
 	if (this->buttons["SUBMIT"]->isPressed())
 	{
 		sf::sleep(sf::milliseconds(100));
-
 		std::thread(&LoginState::sendRequest, this).detach();
-		//this->checkRegex();
 	}
 	if (this->buttons["EXIT_STATE"]->isPressed())
 	{
 		sf::sleep(sf::milliseconds(100));
 		this->endState();
 	}
-
 }
 
 void LoginState::updateTextInputs()

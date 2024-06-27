@@ -128,40 +128,18 @@ GameState::~GameState()
 
 bool GameState::checkMapPlayerIntersect()
 {
+
 	sf::FloatRect playerBounds = this->player->getPosition();
 
-	for (auto& x : this->map.getMap())
+	auto mapElements = this->map.getMap() | std::views::join | std::views::join;
+
+	for (auto& z : mapElements)
 	{
-		for (auto& y : x)
+		if (z.getIsWall() && z.getGlobalBounds().intersects(playerBounds))
 		{
-			for (auto& z : y)
-			{
-				if (z.getIsWall() && z.getGlobalBounds().intersects(playerBounds))
-				{
-					sf::FloatRect wallBounds = z.getGlobalBounds();
-					sf::FloatRect nextPosition;
-					this->collisionManagement(playerBounds, wallBounds);
-					
-
-				/*	if (this->player->getMovementComponent()->getDirection() == MOVING_LEFT) {
-						nextPosition.left = (wallBounds.left + wallBounds.width) - playerBounds.left;
-						nextPosition.top = playerBounds.top;
-
-						this->player->getMovementComponent()->stopVelocity();
-						this->player->setPosition(nextPosition.left, nextPosition.top);
-						isWall = true;
-					}
-					if (this->player->getMovementComponent()->getDirection() == MOVING_RIGHT) {
-						nextPosition.left = wallBounds.left  - playerBounds.left;
-						nextPosition.top = playerBounds.top;
-
-						this->player->getMovementComponent()->stopVelocity();
-						this->player->setPosition(nextPosition.left, nextPosition.top);
-						isWall = true;
-					}*/
-					return true;
-				}
-			}
+			sf::FloatRect wallBounds = z.getGlobalBounds();
+		this->collisionManagement(playerBounds, wallBounds);
+			return true;
 		}
 	}
 	return false;
@@ -455,6 +433,8 @@ bool GameState::checkPacManGhostCollision(Ghosts* ghost)
 }
 
 
+
+
 bool GameState::checkMoveLeft(Entity *entity)
 {
 	
@@ -608,7 +588,7 @@ void GameState::updateInput(const float& dt)
 
 void GameState::movementManager(const float& dt)
 {
-
+	
 	if (!this->checkMapPlayerIntersect()) {
 		switch (this->player->getMovementComponent()->getDirection())
 		{
@@ -643,23 +623,29 @@ void GameState::movementManager(const float& dt)
 
 void GameState::update(const float& dt)
 {
-		this->updateMousePosition();
-		this->movementManager(dt);
-		this->updateInput(dt);
-		this->eatDots();
-		if (!this->caughtPacMan) {
-			this->startGhosts();
-			this->moveGhost(this->blueGhost, dt);
-			this->moveGhost(this->redGhost, dt);
-			this->moveGhost(this->pinkGhost, dt);
-			this->moveGhost(this->yellowGhost, dt);
-			this->player->update(dt);
-			this->blueGhost->update(dt);
-			this->redGhost->update(dt);
-			this->pinkGhost->update(dt);
-			this->yellowGhost->update(dt);
-		}
-		this->display();	
+	
+	this->updateMousePosition();
+	this->movementManager(dt);
+	this->updateInput(dt);
+	this->eatDots();
+	if (!this->caughtPacMan) {
+		this->startGhosts();
+		this->moveGhost(this->blueGhost, dt);
+		this->moveGhost(this->redGhost, dt);
+		this->moveGhost(this->pinkGhost, dt);
+		this->moveGhost(this->yellowGhost, dt);
+		this->player->update(dt);
+		this->blueGhost->update(dt);
+		this->redGhost->update(dt);
+		this->pinkGhost->update(dt);
+		this->yellowGhost->update(dt);
+	}
+	this->display();	
+	if (this->score == 2600)
+	{
+		this->states->push(new WonGameState(this->window, this->states));
+		this->endState();
+	}
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -761,7 +747,7 @@ void GameState::restartGame()
 	this->player->getMovementComponent()->setDirection(IDLE);
 	sf::sleep(sf::milliseconds(500));
 	
-	
+
 	if (!this->pacManLivesSprites.empty())
 		this->pacManLivesSprites.pop_back();
 
@@ -775,10 +761,11 @@ void GameState::restartGame()
 		this->caughtPacMan = false;
 	}
 	else if (this->lives == 0) {
-
-
 		this->states->push(new GameOverState(this->window, this->states));
 		this->endState();
 	}
+
+	
+
 }
 

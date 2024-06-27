@@ -99,6 +99,9 @@
     <ClCompile Include="GameOverState.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="WonGameState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h">
@@ -165,6 +168,9 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="GameOverState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="WonGameState.h">
       <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>

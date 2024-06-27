@@ -110,14 +110,9 @@ void RegisterState::updateButtons()
 		button->update(this->mousePosView);
 	}
 
-	//for (auto& it : this->buttons)
-	//{
-	//	it.second->update(this->mousePosView);
-	//}
 	if (this->buttons["SUBMIT"]->isPressed())
 	{
 		sf::sleep(sf::milliseconds(100));
-
 		this->checkRegex();
 	}
 	if (this->buttons["EXIT_STATE"]->isPressed())
@@ -262,7 +257,8 @@ void RegisterState::handleResponse(const std::string& response, long httpCode)
 
 bool RegisterState::isValidPassword(const std::string& password)
 {
-	std::regex password_regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
+	std::regex password_regex
+	("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
 	return std::regex_match(password, password_regex);
 }
 

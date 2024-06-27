@@ -195,6 +195,7 @@
     <ClCompile Include="TextInput.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="WonGameState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AccountState.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="TextInput.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />
+    <ClInclude Include="WonGameState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -157,7 +157,7 @@ void ScoreState::handleResponse(const std::string& response, long httpCode)
 
 	std::ofstream outFile(filePath);
 	if (outFile.is_open()) {
-		outFile << std::setw(4) << response << std::endl; // Pretty-print with indentation
+		outFile << std::setw(4) << response << std::endl; 
 		outFile.close();
 		std::cout << "Response saved to " << filePath << std::endl;
 	}
