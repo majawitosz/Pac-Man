@@ -454,6 +454,7 @@ bool GameState::checkPacManGhostCollision(Ghosts* ghost)
 	return false;
 }
 
+
 bool GameState::checkMoveLeft(Entity *entity)
 {
 	
